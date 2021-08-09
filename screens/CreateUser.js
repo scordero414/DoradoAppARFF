@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { StyleSheet, View, Dimensions, ScrollView, ImageBackground, Text, Image, Item, RefreshControl } from 'react-native'
+import { StyleSheet, View, Dimensions, ScrollView, ImageBackground, Text, Image, Item, RefreshControl, Platform } from 'react-native'
 import {
     NativeBaseProvider,
     Box,
@@ -14,20 +14,71 @@ import {
     IconButton,
     HStack,
     Divider,
-    Alert
+    Alert,
+    useDisclose,
+    Actionsheet,
 } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
-import { auth, store } from '../constants/keys'
+import { auth, store, storage } from '../constants/keys'
 
 const CreateUser = (props) => {
     const [selectedImage, setSelectedImage] = useState(null)
-
+    const { isOpen, onOpen, onClose } = useDisclose()
     const [nombre, setNombre] = useState('')
     const [email, setEmail] = useState('')
     const [password1, setPassword1] = useState('')
     const [password2, setPassword2] = useState('')
     const [error, setError] = useState(null)
+    const [imgURL, setImgURL] = useState(null)
 
+
+    const uploadImage = async (uri) => {
+
+        const filename = uri.substring(uri.lastIndexOf('/') + 1)
+        const response = await fetch(uri)
+        const blob = await response.blob()
+
+        const ref = storage.ref().child("userImages/" + filename).put(blob)
+
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        ref.on('state_changed', function (snapshot) {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+        }, function (error) {
+            // Handle unsuccessful uploads
+            console.log(error.code);
+        }, function () {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            ref.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+                console.log('File available at', downloadURL);
+                setImgURL(downloadURL);
+            });
+        });
+        // console.log("userImages/" + filename)
+        // setImageName(filename)
+        // console.log(imageName)
+        // getImageURL(filename)
+    };
+
+    // const getImageURL = (filename) => {
+    //     console.log("userImages/" + filename)
+    //     let imageRef = storage.ref().child("userImages/" + filename.trim())
+    //     imageRef
+    //         .getDownloadURL()
+    //         .then((url) => {
+    //             //from url you can fetched the uploaded image easily
+    //             setImgURL(url)
+    //         })
+    //         .catch((e) => console.log('getting downloadURL of image error => ', e.code));
+    // }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const openImagePicker = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
         if (permissionResult.granted === false) {
@@ -38,12 +89,28 @@ const CreateUser = (props) => {
         const pickedImage = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true })
         if (pickedImage.cancelled)
             return
-        console.log(pickedImage)
         setSelectedImage(pickedImage.uri)
+        uploadImage(pickedImage.uri)
     }
 
-    const registrarUsuario = () => {
-        console.log(nombre)
+    const openCamera = async () => {
+
+        const permissionResult = await ImagePicker.getCameraPermissionsAsync()
+        if (permissionResult.granted === false) {
+            alert('Los permisos para acceder a la cámara son requeridos.')
+            return
+        }
+
+        const pickedImage = await ImagePicker.launchCameraAsync()
+        if (pickedImage.cancelled)
+            return
+        setSelectedImage(pickedImage.uri)
+        uploadImage(pickedImage.uri)
+    }
+
+    const registrarUsuario = async () => {
+        console.log(selectedImage)
+        
         if (!nombre.trim()) {
             setError("Ingrese su nombre.")
             return
@@ -59,21 +126,22 @@ const CreateUser = (props) => {
             return
         }
 
-        if (!email.endsWith('@dorado.aero.co')) {
+        if (!email.endsWith('@eldorado.aero')) {
             setError("No estás autorizado para crear cuentas.")
             return
         }
 
-        const usuario = {
-            nombre: nombre,
-            email: email,
-            img: selectedImage,
-            state: null
-        }
+        console.log(imgURL)
 
         auth.createUserWithEmailAndPassword(email, password1)
             .then((res) => {
-                console.log(res.user.uid)
+                // console.log(res.user.uid)
+                const usuario = {
+                    nombre: nombre,
+                    email: email,
+                    img: imgURL,
+                    state: null
+                }
                 store.collection('usuarios').doc(res.user.uid).set(usuario)
                 alert("Usuario Registrado exitosamente")
                 props.navigation.navigate('HomeUser', res.user.uid)
@@ -91,6 +159,7 @@ const CreateUser = (props) => {
                     setError(e.code)
                 }
             })
+
     }
 
     // const guardarInfoUser = async (usuario, res) => {
@@ -107,25 +176,26 @@ const CreateUser = (props) => {
     // }
 
     return (
+        <NativeBaseProvider>
 
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={false} />}>
+            <ScrollView style={styles.container} showsVerticalScrollIndicator={false}
+                refreshControl={<RefreshControl refreshing={false} />}>
 
-            <ImageBackground source={require('../assets/nubes.png')} style={styles.fondo}>
-                <View style={styles.brandView}>
-                    <Image source={require('../assets/eldorado.png')} style={{
-                        resizeMode: "center",
-                        height: 100,
-                        width: 200
-                    }} />
-                </View>
+                <ImageBackground source={require('../assets/nubes.png')} style={styles.fondo}>
+                    <View style={styles.brandView}>
+                        <Image source={require('../assets/eldorado.png')} style={{
+                            resizeMode: "center",
+                            height: 100,
+                            width: 200
+                        }} />
+                    </View>
 
-            </ImageBackground>
+                </ImageBackground>
 
-            <View style={styles.bottonView}>
+                <View style={styles.bottonView}>
 
-                <View style={{ marginTop: 50 }}>
-                    <NativeBaseProvider>
+                    <View style={{ marginTop: 50 }}>
+
                         <Box
                             flex={1}
                             p={2}
@@ -168,7 +238,7 @@ const CreateUser = (props) => {
                                     <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
                                         Selecciona una foto.
                                     </FormControl.Label>
-                                    <Button size="xs" colorScheme="yellow" _text={{ color: 'white' }} onPress={openImagePicker}>
+                                    <Button size="xs" colorScheme="yellow" _text={{ color: 'white' }} onPress={onOpen}>
                                         Seleccionar...
                                     </Button>
 
@@ -185,6 +255,7 @@ const CreateUser = (props) => {
                                     </VStack>
 
                                 </FormControl>
+
                                 <VStack space={2} mt={5}>
                                     {error !== null ?
                                         <Alert status="error" w="100%">
@@ -214,14 +285,30 @@ const CreateUser = (props) => {
                                 </VStack>
                             </VStack>
                         </Box>
-                    </NativeBaseProvider>
-                    {/* </View> */}
+
+
+                        {/* </NativeBaseProvider> */}
+                        {/* </View> */}
+                    </View>
                 </View>
-            </View>
 
 
 
-        </ScrollView>
+            </ScrollView>
+            <Actionsheet isOpen={isOpen} onClose={onClose}>
+                <Actionsheet.Content>
+                    <Actionsheet.Item onPress={() => {
+                        onClose()
+                        openCamera()
+                    }}>Abrir cámara</Actionsheet.Item>
+                    <Actionsheet.Item onPress={() => {
+                        onClose()
+                        openImagePicker()
+                    }}>Abrir galería</Actionsheet.Item>
+                    <Actionsheet.Item onPress={onClose}>Cancelar</Actionsheet.Item>
+                </Actionsheet.Content>
+            </Actionsheet>
+        </NativeBaseProvider>
 
     )
 }

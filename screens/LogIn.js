@@ -37,6 +37,9 @@ const LogIn = (props) => {
                 if (e.code === "auth/wrong-password") {
                     setError("La contraseña es incorrecta.")
                 }
+                else if (e.code === "auth/user-not-found") {
+                    setError("Usuario no registrado")
+                }
                 console.log(e.code)
             })
     }

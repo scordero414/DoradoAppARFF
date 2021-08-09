@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreateUser from './screens/CreateUser';
@@ -8,6 +8,7 @@ import Home from './screens/Home';
 import HomeUser from './screens/HomeUser';
 
 const Stack = createStackNavigator();
+LogBox.ignoreLogs(['Setting a timer']);
 
 function MyStack() {
   return (

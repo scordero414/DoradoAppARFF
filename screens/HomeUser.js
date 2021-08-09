@@ -1,12 +1,19 @@
 import { NativeBaseProvider, View, VStack, HStack, Image, Stack, Heading, IconButton, Box, Flex, Spacer, Button, Text, CheckIcon, Accordion, Select, Content, Alert, List } from 'native-base'
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
+import React, { useEffect, useState, useRef } from 'react'
+import { StyleSheet, ScrollView, Share } from 'react-native'
 import { auth, store } from '../constants/keys'
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import Scanner from '../components/Scanner';
+import QRGnereator from '../components/QRGenerator'
+import ViewShot from "react-native-view-shot";
 
 const HomeUser = (props) => {
 
+    const viewShotRef = useRef()
+
+    const [qrCodeScanner, setQrCodeScanner] = useState(false)
+    const [createQr, setCreateQr] = useState(false)
+    const [qrCodeImg, setQrCodeImg] = useState(null)
     const [user, setUser] = useState({
         id: '',
         nombre: '',
@@ -61,6 +68,22 @@ const HomeUser = (props) => {
         setUsuarios(arr)
     }
 
+    const captureViewShot = async () => {
+        const imageURI = await viewShotRef.current.capture();
+        Share.share({ title: 'QRcode', url: imageURI })
+
+    }
+
+    // const captureScreenshot = () => {
+
+    // }
+    // captureScreen({
+    //     format: "jpg",
+    //     quality: 0.8
+    //   }).then(
+    //     uri => console.log("Image saved to", uri),
+    //     error => console.error("Oops, snapshot failed", error)
+    //   );
     return (
         <NativeBaseProvider>
 
@@ -74,7 +97,7 @@ const HomeUser = (props) => {
                                         source={{ uri: user.img }}
                                         style={styles.image2}
                                     />) :
-                                    <View></View>
+                                    <View><Text>No hay Imagen</Text></View>
                             }
                             < View justifyContent="center" alignItems="center">
                                 <Text fontSize="xl" color='#ffffff'>{user.nombre}</Text>
@@ -150,8 +173,55 @@ const HomeUser = (props) => {
                                 :
                                 <View></View>
                         }
+                        {
+                            (user.state === "member" | user.state === "admin")
+                                ?
+                                <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => setQrCodeScanner(!qrCodeScanner)}>
+                                    <Stack direction="row" space={3} alignItems="center">
+                                        <Text fontSize="md" color='#ffffff'>Escanear Código QR</Text>
+                                        <SimpleLineIcons name="logout" size={24} color="white" />
+                                    </Stack>
+                                </Button>
+                                :
+                                <View></View>
+                        }
+                        {
+                            qrCodeScanner
+                                ?
+                                <Scanner></Scanner>
+                                :
+                                <View></View>
+                        }
+                        {
+                            (user.state === "member" | user.state === "admin")
+                                ?
+                                <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => setCreateQr(!createQr)}>
+                                    <Stack direction="row" space={3} alignItems="center">
+                                        <Text fontSize="md" color='#ffffff'>Crear Código QR</Text>
+                                    </Stack>
+                                </Button>
+                                :
+                                <View></View>
+                        }
 
-
+                        {
+                            createQr
+                                ?
+                                (
+                                    <View justifyContent='center' alignItems='center'>
+                                        <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ format: 'png', quality: 1.0 }}>
+                                            <QRGnereator props={"Info Extintor:"}></QRGnereator>
+                                        </ViewShot>
+                                        <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => captureViewShot()}>
+                                            <Stack direction="row" space={3} alignItems="center">
+                                                <Text fontSize="md" color='#ffffff'>Guardar</Text>
+                                            </Stack>
+                                        </Button>
+                                    </View>
+                                )
+                                :
+                                <View></View>
+                        }
 
                     </View>
                 </ScrollView>
