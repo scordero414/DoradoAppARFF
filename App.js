@@ -6,6 +6,7 @@ import CreateUser from './screens/CreateUser';
 import LogIn from './screens/LogIn';
 import Home from './screens/Home';
 import HomeUser from './screens/HomeUser';
+import InfoQR from './screens/InfoQR';
 
 const Stack = createStackNavigator();
 LogBox.ignoreLogs(['Setting a timer']);
@@ -17,6 +18,7 @@ function MyStack() {
       <Stack.Screen name="LogIn" component={LogIn} />
       <Stack.Screen name="CreateUser" component={CreateUser} />
       <Stack.Screen name="HomeUser" component={HomeUser} />
+      <Stack.Screen name="InfoQR" component={InfoQR} />
       {/* <Stack.Screen name="UserDetails" component={UserDetails}/> */}
     </Stack.Navigator>
   )

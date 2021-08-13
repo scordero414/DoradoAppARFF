@@ -13,7 +13,7 @@ export default function CustomQRCodes(props) {
     <>
       <CustomQRCode
         codeStyle='square'
-        linearGradient={['blue', 'yellow']}
+        // linearGradient={['blue', 'yellow']}
         content={props.props}
       />
     </>

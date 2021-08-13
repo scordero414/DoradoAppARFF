@@ -1,19 +1,16 @@
-import { NativeBaseProvider, View, VStack, HStack, Image, Stack, Heading, IconButton, Box, Flex, Spacer, Button, Text, CheckIcon, Accordion, Select, Content, Alert, List } from 'native-base'
+import { NativeBaseProvider, View, VStack, HStack, Image, Stack, Spinner, Heading, IconButton, Box, Flex, Spacer, Button, Text, CheckIcon, Accordion, Select, Content, Alert, List } from 'native-base'
 import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, ScrollView, Share } from 'react-native'
 import { auth, store } from '../constants/keys'
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Scanner from '../components/Scanner';
-import QRGnereator from '../components/QRGenerator'
-import ViewShot from "react-native-view-shot";
+
 
 const HomeUser = (props) => {
 
-    const viewShotRef = useRef()
 
     const [qrCodeScanner, setQrCodeScanner] = useState(false)
-    const [createQr, setCreateQr] = useState(false)
-    const [qrCodeImg, setQrCodeImg] = useState(null)
+    // const [qrCodeImg, setQrCodeImg] = useState(null)
     const [user, setUser] = useState({
         id: '',
         nombre: '',
@@ -22,9 +19,11 @@ const HomeUser = (props) => {
         state: null
     })
 
+    const [loading, setLoading] = useState(false)
     const [usuarios, setUsuarios] = useState([])
 
     const getUserById = async (id) => {
+        // console.log(id)
         const dbRef = store.collection("usuarios").doc(id)
         const doc = await dbRef.get()
         const user = doc.data()
@@ -40,6 +39,12 @@ const HomeUser = (props) => {
         getUsuarios()
         // console.log(usuarios)
     }, [])
+
+    const goCreateQR = () => {
+        setLoading(true)
+        props.navigation.navigate('InfoQR', user.id)
+        setLoading(false)
+    }
 
     const logout = () => {
         auth.signOut().
@@ -68,11 +73,7 @@ const HomeUser = (props) => {
         setUsuarios(arr)
     }
 
-    const captureViewShot = async () => {
-        const imageURI = await viewShotRef.current.capture();
-        Share.share({ title: 'QRcode', url: imageURI })
 
-    }
 
     // const captureScreenshot = () => {
 
@@ -97,7 +98,7 @@ const HomeUser = (props) => {
                                         source={{ uri: user.img }}
                                         style={styles.image2}
                                     />) :
-                                    <View><Text>No hay Imagen</Text></View>
+                                    <View><Spinner accessibilityLabel="Loading image" /></View>
                             }
                             < View justifyContent="center" alignItems="center">
                                 <Text fontSize="xl" color='#ffffff'>{user.nombre}</Text>
@@ -195,33 +196,26 @@ const HomeUser = (props) => {
                         {
                             (user.state === "member" | user.state === "admin")
                                 ?
-                                <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => setCreateQr(!createQr)}>
+                                <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => goCreateQR()}>
                                     <Stack direction="row" space={3} alignItems="center">
-                                        <Text fontSize="md" color='#ffffff'>Crear Código QR</Text>
+                                        {
+                                            loading
+                                                ?
+                                                (
+                                                    <View>
+                                                        {/* <Text>Iniciar Sesión</Text> */}
+                                                        <Spinner accessibilityLabel="Loading posts" />
+                                                    </View>
+                                                )
+                                                :
+                                                <Text fontSize="md" color='#ffffff'>Crear Código QR</Text>
+                                        }
                                     </Stack>
                                 </Button>
                                 :
                                 <View></View>
                         }
 
-                        {
-                            createQr
-                                ?
-                                (
-                                    <View justifyContent='center' alignItems='center'>
-                                        <ViewShot ref={viewShotRef} style={{ flex: 1 }} options={{ format: 'png', quality: 1.0 }}>
-                                            <QRGnereator props={"Info Extintor:"}></QRGnereator>
-                                        </ViewShot>
-                                        <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => captureViewShot()}>
-                                            <Stack direction="row" space={3} alignItems="center">
-                                                <Text fontSize="md" color='#ffffff'>Guardar</Text>
-                                            </Stack>
-                                        </Button>
-                                    </View>
-                                )
-                                :
-                                <View></View>
-                        }
 
                     </View>
                 </ScrollView>

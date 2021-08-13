@@ -40,43 +40,19 @@ const CreateUser = (props) => {
 
         const ref = storage.ref().child("userImages/" + filename).put(blob)
 
-        // Register three observers:
-        // 1. 'state_changed' observer, called any time the state changes
-        // 2. Error observer, called on failure
-        // 3. Completion observer, called on successful completion
         ref.on('state_changed', function (snapshot) {
-            // Observe state change events such as progress, pause, and resume
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
         }, function (error) {
-            // Handle unsuccessful uploads
             console.log(error.code);
         }, function () {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
             ref.snapshot.ref.getDownloadURL().then(function (downloadURL) {
                 console.log('File available at', downloadURL);
                 setImgURL(downloadURL);
             });
         });
-        // console.log("userImages/" + filename)
-        // setImageName(filename)
-        // console.log(imageName)
-        // getImageURL(filename)
     };
 
-    // const getImageURL = (filename) => {
-    //     console.log("userImages/" + filename)
-    //     let imageRef = storage.ref().child("userImages/" + filename.trim())
-    //     imageRef
-    //         .getDownloadURL()
-    //         .then((url) => {
-    //             //from url you can fetched the uploaded image easily
-    //             setImgURL(url)
-    //         })
-    //         .catch((e) => console.log('getting downloadURL of image error => ', e.code));
-    // }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const openImagePicker = async () => {
@@ -109,7 +85,6 @@ const CreateUser = (props) => {
     }
 
     const registrarUsuario = async () => {
-        console.log(selectedImage)
         
         if (!nombre.trim()) {
             setError("Ingrese su nombre.")
@@ -131,7 +106,11 @@ const CreateUser = (props) => {
             return
         }
 
-        console.log(imgURL)
+        if (!selectedImage.trim()) {
+            setError("Tienes que elegir una foto.")
+            return
+        }
+        
 
         auth.createUserWithEmailAndPassword(email, password1)
             .then((res) => {

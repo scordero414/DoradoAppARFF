@@ -12,26 +12,32 @@ import {
     Icon,
     IconButton,
     HStack,
-    Divider, 
-    Alert
+    Divider,
+    Alert,
+    Spinner
 } from 'native-base';
-import { auth, store } from '../constants/keys'
+import { auth } from '../constants/keys'
 
 const LogIn = (props) => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const usuario = {
         email: email,
     }
 
     const iniciarSesion = () => {
+        setLoading(true)
         auth.signInWithEmailAndPassword(email, password)
             .then(res => {
                 alert("Sesión Iniciada")
-                props.navigation.navigate('HomeUser', res.user.uid)
+
+                props.navigation.navigate('HomeUser', id = res.user.uid)
+                console.log(res.user.uid)
+                setLoading(false)
             })
             .catch(e => {
                 if (e.code === "auth/wrong-password") {
@@ -90,7 +96,7 @@ const LogIn = (props) => {
                                     <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
                                         Contraseña
                                     </FormControl.Label>
-                                    <Input onChangeText={(value) => { setPassword(value) }}variant="rounded" type="password" />
+                                    <Input onChangeText={(value) => { setPassword(value) }} variant="rounded" type="password" />
                                 </FormControl>
                                 <VStack space={2} mt={5}>
                                     {error !== null ?
@@ -103,7 +109,20 @@ const LogIn = (props) => {
                                         <View></View>
                                     }
                                     <Button onPress={() => iniciarSesion()} colorScheme="cyan" _text={{ color: 'white' }}>
-                                        Iniciar Sesión
+                                        {
+                                            loading
+                                                ?
+                                                (
+                                                    <View>
+                                                        {/* <Text>Iniciar Sesión</Text> */}
+                                                        <Spinner accessibilityLabel="Loading posts" />
+                                                    </View>
+                                                )
+                                                :
+                                                "Iniciar Sesión"
+                                        }
+
+
                                     </Button>
 
                                     <HStack justifyContent="center" alignItem='center' >
