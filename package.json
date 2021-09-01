@@ -24,6 +24,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-animated-multistep": "^1.1.1",
     "react-native-custom-qr-codes-expo": "^2.2.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-image-picker": "^4.0.6",

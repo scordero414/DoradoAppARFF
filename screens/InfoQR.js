@@ -46,13 +46,14 @@ const InfoQR = (props) => {
     // setCreateQr(!createQr)}
     const [selectedImage, setSelectedImage] = useState(null)
     const [imgURL, setImgURL] = useState(null)
+    const [error, setError] = useState(null)
 
     const [extintor, setExtintor] = useState({
         userId: props.route.params,
         foto: null,
-        codigo: '',
-        terminal: '',
-        ubicacion: '',
+        codigo: null,
+        terminal: null,
+        ubicacion: null,
         ubicacionDetallada: null,
         ubicacionExacta: null,
         tipoAgente: null,
@@ -88,45 +89,61 @@ const InfoQR = (props) => {
     })
     const [idRefExt, setIdRefExt] = useState(null)
 
-    const onChangeDateFechaRecarga = (event, selectedDate) => {
-        const currentDate = selectedDate || extintor.fechaRecarga;
-        setExtintorValues("fechaRecarga", currentDate);
-    };
+    // const onChangeDateFechaRecarga = (event, selectedDate) => {
+    //     const currentDate = selectedDate || extintor.fechaRecarga;
+    //     setExtintorValues("fechaRecarga", currentDate);
+    //     console.log("1")
+    // };
 
-    const onChangeDateProxFechaRecarga = (event, selectedDate) => {
-        const currentDate = selectedDate || extintor.fechaProximaRecarga;
-        setExtintorValues("fechaProximaRecarga", currentDate);
-    };
+    // const onChangeDateProxFechaRecarga = (event, selectedDate) => {
+    //     const currentDate = selectedDate || extintor.fechaProximaRecarga;
+    //     setExtintorValues("fechaProximaRecarga", currentDate);
+    //     console.log("2")
+    // };
 
-    const onChangeDateProxPruebaHidrostatica = (event, selectedDate) => {
-        const currentDate = selectedDate || extintor.fechaProximaPruebaHidrostatica;
-        setExtintorValues("fechaProximaPruebaHidrostatica", currentDate);
-    };
+    // const onChangeDateProxPruebaHidrostatica = (event, selectedDate) => {
+    //     const currentDate = selectedDate || extintor.fechaProximaPruebaHidrostatica;
+    //     setExtintorValues("fechaProximaPruebaHidrostatica", currentDate);
+    //     console.log("3")
+    // };
 
-    const onChangeDatePruebaHidrostatica = (event, selectedDate) => {
-        const currentDate = selectedDate || extintor.fechaPruebaHidrostatica;
-        setExtintorValues("fechaPruebaHidrostatica", currentDate);
-    };
+    // const onChangeDatePruebaHidrostatica = (event, selectedDate) => {
+    //     const currentDate = selectedDate || extintor.fechaPruebaHidrostatica;
+    //     setExtintorValues("fechaPruebaHidrostatica", currentDate);
+    //     console.log("4")
+    // };
+
+    const validate = () => {
+        for (i in extintor) {
+            if (extintor[i] === null) {
+                setError("Debes de llenar todos los campos, revisa: " + i.charAt(0).toUpperCase() + i.slice(1))
+                return false
+            }
+        }
+        return true
+    }
 
     const textColor = { color: 'muted.700', fontSize: 'sm', fontWeight: 600 }
 
     const createQrCode = () => {
         // console.log(extintor)
-        console.log("Imagen: "+imgURL)
+        console.log("Imagen: " + imgURL)
         // setExtintor({ ...extintor, foto: imgURL })
-        setExtintorValues("foto",imgURL)
-        console.log("Foto: "+extintor.foto)
+        setExtintorValues("foto", imgURL)
+        console.log("Foto: " + extintor.foto)
+        if (validate()) {
+            store.collection("extintores").add(extintor)
+                .then((docRef) => {
+                    // setExtintor({ ...copyExtintor, QR:})
+                    setIdRefExt(docRef.id)
+                    console.log("Document written with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error.code);
+                });
+            setCreateQr(!createQr)
+        }
 
-        store.collection("extintores").add(extintor)
-            .then((docRef) => {
-                // setExtintor({ ...copyExtintor, QR:})
-                setIdRefExt(docRef.id)
-                console.log("Document written with ID: ", docRef.id);
-            })
-            .catch((error) => {
-                console.error("Error adding document: ", error.code);
-            });
-        setCreateQr(!createQr)
     }
 
     const setExtintorValues = (item, itemValue) => {
@@ -314,7 +331,7 @@ const InfoQR = (props) => {
                                     <Input variant="outline" onChangeText={(text) => {
                                         setExtintor({
                                             ...extintor,
-                                            ubicación: text
+                                            ubicacion: text
                                         })
                                     }} />
 
@@ -405,7 +422,7 @@ const InfoQR = (props) => {
                                             value={extintor.fechaRecarga}
                                             is24Hour={true}
                                             display="default"
-                                            onChange={onChangeDateFechaRecarga}
+                                            // onChange={onChangeDateFechaRecarga}
                                         />
                                         {/* <DateTimePicker
                                             value={extintor.fechaRecarga}
@@ -431,7 +448,7 @@ const InfoQR = (props) => {
                                             value={extintor.fechaProximaRecarga}
                                             is24Hour={true}
                                             display="default"
-                                            onChange={onChangeDateProxFechaRecarga}
+                                            // onChange={onChangeDateProxFechaRecarga}
                                         />
                                         {/* <DateTimePicker
                                             value={extintor.fechaProximaRecarga}
@@ -469,7 +486,7 @@ const InfoQR = (props) => {
                                             value={extintor.fechaPruebaHidrostatica}
                                             is24Hour={true}
                                             display="default"
-                                            onChange={onChangeDatePruebaHidrostatica}
+                                            // onChange={onChangeDatePruebaHidrostatica}
                                         />
                                     </View>
 
@@ -485,7 +502,7 @@ const InfoQR = (props) => {
                                             value={extintor.fechaProximaPruebaHidrostatica}
                                             is24Hour={true}
                                             display="default"
-                                            onChange={onChangeDateProxPruebaHidrostatica}
+                                            // onChange={onChangeDateProxPruebaHidrostatica}
                                         />
                                         {/* <DateTimePicker
                                             value={extintor.fechaProximaPruebaHidrostatica}
@@ -770,6 +787,15 @@ const InfoQR = (props) => {
                                 } */}
                                     </VStack>
                                 </FormControl>
+                                {error !== null ?
+                                    <Alert status="error" w="100%">
+                                        <Alert.Icon />
+                                        <Alert.Title
+                                            flexShrink={1}
+                                        >{error}</Alert.Title>
+                                    </Alert> :
+                                    <View></View>
+                                }
                             </VStack>
                             <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => createQrCode()}>
                                 <Stack direction="row" space={3} alignItems="center">

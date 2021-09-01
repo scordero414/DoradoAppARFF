@@ -5,7 +5,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
-const Scanner = () => {
+const Scanner = (props) => {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
@@ -19,6 +19,9 @@ const Scanner = () => {
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
         alert(data);
+        console.log(props)
+        props.onChange(false);
+        props.props.navigation.navigate('ScannedQR', data)
     };
 
     if (hasPermission === null) {

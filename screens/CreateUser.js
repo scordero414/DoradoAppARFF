@@ -17,6 +17,7 @@ import {
     Alert,
     useDisclose,
     Actionsheet,
+    Spinner
 } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import { auth, store, storage } from '../constants/keys'
@@ -30,6 +31,8 @@ const CreateUser = (props) => {
     const [password2, setPassword2] = useState('')
     const [error, setError] = useState(null)
     const [imgURL, setImgURL] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [loadingImage, setLoadingImage] = useState(false)
 
 
     const uploadImage = async (uri) => {
@@ -49,6 +52,8 @@ const CreateUser = (props) => {
             ref.snapshot.ref.getDownloadURL().then(function (downloadURL) {
                 console.log('File available at', downloadURL);
                 setImgURL(downloadURL);
+                setLoadingImage(false)
+                
             });
         });
     };
@@ -65,13 +70,14 @@ const CreateUser = (props) => {
         const pickedImage = await ImagePicker.launchImageLibraryAsync({ allowsEditing: true })
         if (pickedImage.cancelled)
             return
+        setLoadingImage(true)
         setSelectedImage(pickedImage.uri)
         uploadImage(pickedImage.uri)
     }
 
     const openCamera = async () => {
 
-        const permissionResult = await ImagePicker.getCameraPermissionsAsync()
+        const permissionResult = await ImagePicker.requestPermissionsAsync()
         if (permissionResult.granted === false) {
             alert('Los permisos para acceder a la cámara son requeridos.')
             return
@@ -80,12 +86,16 @@ const CreateUser = (props) => {
         const pickedImage = await ImagePicker.launchCameraAsync()
         if (pickedImage.cancelled)
             return
+        setLoadingImage(true)
         setSelectedImage(pickedImage.uri)
         uploadImage(pickedImage.uri)
+        return
     }
 
     const registrarUsuario = async () => {
-        
+        setLoading(true)
+
+
         if (!nombre.trim()) {
             setError("Ingrese su nombre.")
             return
@@ -106,11 +116,11 @@ const CreateUser = (props) => {
             return
         }
 
-        if (!selectedImage.trim()) {
+        if (!imgURL.trim()) {
             setError("Tienes que elegir una foto.")
             return
         }
-        
+
 
         auth.createUserWithEmailAndPassword(email, password1)
             .then((res) => {
@@ -125,9 +135,10 @@ const CreateUser = (props) => {
                 alert("Usuario Registrado exitosamente")
                 props.navigation.navigate('HomeUser', res.user.uid)
                 // guardarInfoUser(usuario, res.user.uid)
-
+                setLoading(false)
             })
             .catch((e) => {
+                setLoading(false)
                 if (e.code === "auth/invalid-email") {
                     setError("El formato de email es incorrecto.")
                 } else if (e.code === "auth/weak-password") {
@@ -224,11 +235,21 @@ const CreateUser = (props) => {
                                     <VStack space={2} mt={5} justifyContent="center" alignItem='center' >
                                         <HStack justifyContent="center" alignItem='center'>
                                             {selectedImage !== null ?
-                                                (<Image
-                                                    source={{ uri: selectedImage }}
-                                                    style={styles.image2}
-                                                />) :
-                                                <View></View>}
+                                                (
+                                                    loadingImage == false ?
+                                                        (<Image
+                                                            source={{ uri: imgURL }}
+                                                            style={styles.image2}
+                                                        />) :
+                                                        <View>
+                                                            <Spinner accessibilityLabel="Loading posts" />
+                                                        </View>
+                                                    
+                                                )
+                                                :
+                                                <View></View>
+                                            }
+
                                         </HStack>
 
                                     </VStack>
@@ -246,7 +267,18 @@ const CreateUser = (props) => {
                                         <View></View>
                                     }
                                     <Button colorScheme="cyan" _text={{ color: 'white' }} onPress={() => registrarUsuario()}>
-                                        Registrarse
+                                        {
+                                            loading
+                                                ?
+                                                (
+                                                    <View>
+                                                        {/* <Text>Iniciar Sesión</Text> */}
+                                                        <Spinner accessibilityLabel="Loading posts" />
+                                                    </View>
+                                                )
+                                                :
+                                                "Iniciar Sesión"
+                                        }
                                     </Button>
 
                                     <HStack justifyContent="center" alignItem='center' >

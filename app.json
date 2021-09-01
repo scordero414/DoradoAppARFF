@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "DoradoAppARFF",
-    "slug": "doradoApp",
+    "slug": "dorado_arffapp",
     "version": "1.0.0",
+    "owner": "scordero414",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {

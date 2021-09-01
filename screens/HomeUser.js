@@ -6,7 +6,38 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import Scanner from '../components/Scanner';
 
 
+import AnimatedMultistep from "react-native-animated-multistep";
+import Step1 from '../components/FormSteps/Step1';
+import Step2 from '../components/FormSteps/Step2';
+import Step3 from '../components/FormSteps/Step3';
+import Step4 from '../components/FormSteps/Step4';
+
+
 const HomeUser = (props) => {
+
+    onNext = () => {
+        console.log("Next");
+    };
+    onBack = () => {
+        console.log("Back");
+    };
+
+    finish = state => {
+        console.log("TCL: App -> state", state);
+    };
+
+
+    const allSteps = [
+        { name: "step 1", component: Step1 },
+        { name: "step 2", component: Step2 },
+        { name: "step 3", component: Step3 },
+        { name: "step 4", component: Step4 }
+    ];
+
+
+
+
+
 
 
     const [qrCodeScanner, setQrCodeScanner] = useState(false)
@@ -34,10 +65,14 @@ const HomeUser = (props) => {
 
     }
 
+    const [text, setText] = React.useState('');
+  const hasUnsavedChanges = Boolean(text);
+
     useEffect(() => {
+        console.log(props.navigation.canGoBack)
+        props.navigation.canGoBack = false
         getUserById(props.route.params)
         getUsuarios()
-        // console.log(usuarios)
     }, [])
 
     const goCreateQR = () => {
@@ -73,6 +108,9 @@ const HomeUser = (props) => {
         setUsuarios(arr)
     }
 
+    function handleChange(newValue) {
+        setQrCodeScanner(newValue);
+    }
 
 
     // const captureScreenshot = () => {
@@ -121,7 +159,7 @@ const HomeUser = (props) => {
                                 ?
                                 <View >
                                     <Box m={3}>
-                                        <Accordion allowMultiple>
+                                        <Accordion allowMultiple onAccordionOpen={getUsuarios()}>
                                             <Accordion.Item>
                                                 <Accordion.Summary _expanded={{ backgroundColor: '#FFCA00' }}>
                                                     Usuarios
@@ -189,7 +227,7 @@ const HomeUser = (props) => {
                         {
                             qrCodeScanner
                                 ?
-                                <Scanner></Scanner>
+                                <Scanner props={props} onChange={handleChange}></Scanner>
                                 :
                                 <View></View>
                         }
@@ -216,6 +254,22 @@ const HomeUser = (props) => {
                                 <View></View>
                         }
 
+                        {/* <View style={{ flex: 1, backgroundColor: "#1dd1a1" }}>
+                            <View style={styles.upperContainer}>
+                                <Text style={styles.loginText}>Register</Text>
+                            </View>
+                            <View style={styles.lowerContainer}>
+                                <AnimatedMultistep
+                                    steps={allSteps}
+                                    onFinish={this.finish}
+                                    animate={true}
+                                    onBack={this.onBack}
+                                    onNext={this.onNext}
+                                />
+                            </View>
+                        </View> */}
+
+
 
                     </View>
                 </ScrollView>
@@ -229,6 +283,18 @@ const HomeUser = (props) => {
 export default HomeUser
 
 const styles = StyleSheet.create({
+    upperContainer: {
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center"
+    },
+    loginText: {
+        fontSize: 32,
+        color: "#fff"
+    },
+    lowerContainer: {
+        flex: 2
+    },
     container: {
         flex: 1,
         backgroundColor: '#ffffff',
