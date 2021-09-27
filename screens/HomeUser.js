@@ -6,39 +6,10 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import Scanner from '../components/Scanner';
 
 
-import AnimatedMultistep from "react-native-animated-multistep";
-import Step1 from '../components/FormSteps/Step1';
-import Step2 from '../components/FormSteps/Step2';
-import Step3 from '../components/FormSteps/Step3';
-import Step4 from '../components/FormSteps/Step4';
+
 
 
 const HomeUser = (props) => {
-
-    onNext = () => {
-        console.log("Next");
-    };
-    onBack = () => {
-        console.log("Back");
-    };
-
-    finish = state => {
-        console.log("TCL: App -> state", state);
-    };
-
-
-    const allSteps = [
-        { name: "step 1", component: Step1 },
-        { name: "step 2", component: Step2 },
-        { name: "step 3", component: Step3 },
-        { name: "step 4", component: Step4 }
-    ];
-
-
-
-
-
-
 
     const [qrCodeScanner, setQrCodeScanner] = useState(false)
     // const [qrCodeImg, setQrCodeImg] = useState(null)
@@ -55,6 +26,7 @@ const HomeUser = (props) => {
 
     const getUserById = async (id) => {
         // console.log(id)
+
         const dbRef = store.collection("usuarios").doc(id)
         const doc = await dbRef.get()
         const user = doc.data()
@@ -66,13 +38,15 @@ const HomeUser = (props) => {
     }
 
     const [text, setText] = React.useState('');
-  const hasUnsavedChanges = Boolean(text);
+    const hasUnsavedChanges = Boolean(text);
 
     useEffect(() => {
+        setLoading(true)
         console.log(props.navigation.canGoBack)
         props.navigation.canGoBack = false
         getUserById(props.route.params)
         getUsuarios()
+        setLoading(false)
     }, [])
 
     const goCreateQR = () => {
@@ -136,7 +110,8 @@ const HomeUser = (props) => {
                                         source={{ uri: user.img }}
                                         style={styles.image2}
                                     />) :
-                                    <View><Spinner accessibilityLabel="Loading image" /></View>
+                                    (<Spinner size="lg" />)
+
                             }
                             < View justifyContent="center" alignItems="center">
                                 <Text fontSize="xl" color='#ffffff'>{user.nombre}</Text>
@@ -268,6 +243,9 @@ const HomeUser = (props) => {
                                 />
                             </View>
                         </View> */}
+                        <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => {props.navigation.navigate('Revision', "SRhGnJDjjMMBwCgJFjK7" )}}>
+                            Revisión
+                        </Button>
 
 
 

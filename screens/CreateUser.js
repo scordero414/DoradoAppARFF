@@ -21,6 +21,7 @@ import {
 } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import { auth, store, storage } from '../constants/keys'
+import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 
 const CreateUser = (props) => {
     const [selectedImage, setSelectedImage] = useState(null)
@@ -53,7 +54,7 @@ const CreateUser = (props) => {
                 console.log('File available at', downloadURL);
                 setImgURL(downloadURL);
                 setLoadingImage(false)
-                
+
             });
         });
     };
@@ -77,7 +78,7 @@ const CreateUser = (props) => {
 
     const openCamera = async () => {
 
-        const permissionResult = await ImagePicker.requestPermissionsAsync()
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
         if (permissionResult.granted === false) {
             alert('Los permisos para acceder a la cámara son requeridos.')
             return
@@ -152,174 +153,163 @@ const CreateUser = (props) => {
 
     }
 
-    // const guardarInfoUser = async (usuario, res) => {
-
-    //     try {
-    //         await 
-    //     } catch (err) {
-    //         console.log("ERORRRR: "+ err.code)
-    //     }
-    //     // setNombre('')
-    //     // setEmail('')
-    //     // setSelectedImage(null)
-    //     // setError(null)
-    // }
-
     return (
-        <NativeBaseProvider>
+        <KeyboardAvoidingWrapper>
+            <NativeBaseProvider>
 
-            <ScrollView style={styles.container} showsVerticalScrollIndicator={false}
-                refreshControl={<RefreshControl refreshing={false} />}>
+                <ScrollView style={styles.container} showsVerticalScrollIndicator={false}
+                    refreshControl={<RefreshControl refreshing={false} />}>
 
-                <ImageBackground source={require('../assets/nubes.png')} style={styles.fondo}>
-                    <View style={styles.brandView}>
-                        <Image source={require('../assets/eldorado.png')} style={{
-                            resizeMode: "center",
-                            height: 100,
-                            width: 200
-                        }} />
-                    </View>
+                    <ImageBackground source={require('../assets/nubes.png')} style={styles.fondo}>
+                        <View style={styles.brandView}>
+                            <Image source={require('../assets/eldorado.png')} style={{
+                                resizeMode: "center",
+                                height: 100,
+                                width: 200
+                            }} />
+                        </View>
 
-                </ImageBackground>
+                    </ImageBackground>
 
-                <View style={styles.bottonView}>
+                    <View style={styles.bottonView}>
 
-                    <View style={{ marginTop: 50 }}>
+                        <View style={{ marginTop: 50 }}>
 
-                        <Box
-                            flex={1}
-                            p={2}
-                            w="90%"
-                            mx='auto'
-                        >
-                            <Heading size="lg" color='003049'>
-                                Bienvendido
-                            </Heading>
-                            <Heading color="muted.400" size="xs">
-                                Crea tu cuenta para continuar.
-                            </Heading>
-
-                            <VStack space={2} mt={5}>
-                                <FormControl>
-                                    <FormControl.Label placeholder="Juan Perez" _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
-                                        Nombre Completo
-                                    </FormControl.Label>
-                                    <Input onChangeText={(value) => { setNombre(value) }} variant="rounded" />
-                                </FormControl>
-                                <FormControl>
-                                    <FormControl.Label placeholder="example@gmail.com" _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
-                                        Email
-                                    </FormControl.Label>
-                                    <Input onChangeText={(value) => { setEmail(value) }} variant="rounded" />
-                                </FormControl>
-                                <FormControl>
-                                    <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
-                                        Contraseña
-                                    </FormControl.Label>
-                                    <Input onChangeText={(value) => { setPassword1(value) }} variant="rounded" type="password" />
-                                </FormControl>
-                                <FormControl>
-                                    <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
-                                        Confirmar Contraseña
-                                    </FormControl.Label>
-                                    <Input onChangeText={(value) => { setPassword2(value) }} variant="rounded" type="password" />
-                                </FormControl>
-                                <FormControl>
-                                    <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
-                                        Selecciona una foto.
-                                    </FormControl.Label>
-                                    <Button size="xs" colorScheme="yellow" _text={{ color: 'white' }} onPress={onOpen}>
-                                        Seleccionar...
-                                    </Button>
-
-                                    <VStack space={2} mt={5} justifyContent="center" alignItem='center' >
-                                        <HStack justifyContent="center" alignItem='center'>
-                                            {selectedImage !== null ?
-                                                (
-                                                    loadingImage == false ?
-                                                        (<Image
-                                                            source={{ uri: imgURL }}
-                                                            style={styles.image2}
-                                                        />) :
-                                                        <View>
-                                                            <Spinner accessibilityLabel="Loading posts" />
-                                                        </View>
-                                                    
-                                                )
-                                                :
-                                                <View></View>
-                                            }
-
-                                        </HStack>
-
-                                    </VStack>
-
-                                </FormControl>
+                            <Box
+                                flex={1}
+                                p={2}
+                                w="90%"
+                                mx='auto'
+                            >
+                                <Heading size="lg" color='003049'>
+                                    Bienvendido
+                                </Heading>
+                                <Heading color="muted.400" size="xs">
+                                    Crea tu cuenta para continuar.
+                                </Heading>
 
                                 <VStack space={2} mt={5}>
-                                    {error !== null ?
-                                        <Alert status="error" w="100%">
-                                            <Alert.Icon />
-                                            <Alert.Title
-                                                flexShrink={1}
-                                            >{error}</Alert.Title>
-                                        </Alert> :
-                                        <View></View>
-                                    }
-                                    <Button colorScheme="cyan" _text={{ color: 'white' }} onPress={() => registrarUsuario()}>
-                                        {
-                                            loading
-                                                ?
-                                                (
-                                                    <View>
-                                                        {/* <Text>Iniciar Sesión</Text> */}
-                                                        <Spinner accessibilityLabel="Loading posts" />
-                                                    </View>
-                                                )
-                                                :
-                                                "Iniciar Sesión"
+                                    <FormControl>
+                                        <FormControl.Label placeholder="Juan Perez" _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
+                                            Nombre Completo
+                                        </FormControl.Label>
+                                        <Input onChangeText={(value) => { setNombre(value) }} variant="rounded" />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormControl.Label placeholder="example@gmail.com" _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
+                                            Email
+                                        </FormControl.Label>
+                                        <Input onChangeText={(value) => { setEmail(value) }} variant="rounded" />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
+                                            Contraseña
+                                        </FormControl.Label>
+                                        <Input onChangeText={(value) => { setPassword1(value) }} variant="rounded" type="password" />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
+                                            Confirmar Contraseña
+                                        </FormControl.Label>
+                                        <Input onChangeText={(value) => { setPassword2(value) }} variant="rounded" type="password" />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormControl.Label _text={{ color: 'muted.700', fontSize: 'sm', fontWeight: 600 }}>
+                                            Selecciona una foto.
+                                        </FormControl.Label>
+                                        <Button size="xs" colorScheme="yellow" _text={{ color: 'white' }} onPress={onOpen}>
+                                            Seleccionar...
+                                        </Button>
+
+                                        <VStack space={2} mt={5} justifyContent="center" alignItem='center' >
+                                            <HStack justifyContent="center" alignItem='center'>
+                                                {selectedImage !== null ?
+                                                    (
+                                                        loadingImage == false ?
+                                                            (<Image
+                                                                source={{ uri: imgURL }}
+                                                                style={styles.image2}
+                                                            />) :
+                                                            <View>
+                                                                <Spinner accessibilityLabel="Loading posts" />
+                                                            </View>
+
+                                                    )
+                                                    :
+                                                    <View></View>
+                                                }
+
+                                            </HStack>
+
+                                        </VStack>
+
+                                    </FormControl>
+
+                                    <VStack space={2} mt={5}>
+                                        {error !== null ?
+                                            <Alert status="error" w="100%">
+                                                <Alert.Icon />
+                                                <Alert.Title
+                                                    flexShrink={1}
+                                                >{error}</Alert.Title>
+                                            </Alert> :
+                                            <View></View>
                                         }
-                                    </Button>
-
-                                    <HStack justifyContent="center" alignItem='center' >
-                                        <IconButton
-                                            variant='unstyled'
-                                            startIcon={
-                                                <Image source={require('../assets/opain.png')} style={{
-                                                    resizeMode: "center",
-                                                    height: 100,
-                                                    width: 200
-                                                }} />
+                                        <Button colorScheme="cyan" _text={{ color: 'white' }} onPress={() => registrarUsuario()}>
+                                            {
+                                                loading
+                                                    ?
+                                                    (
+                                                        <View>
+                                                            {/* <Text>Iniciar Sesión</Text> */}
+                                                            <Spinner accessibilityLabel="Loading posts" />
+                                                        </View>
+                                                    )
+                                                    :
+                                                    "Iniciar Sesión"
                                             }
-                                        />
-                                    </HStack>
+                                        </Button>
+
+                                        <HStack justifyContent="center" alignItem='center' >
+                                            <IconButton
+                                                variant='unstyled'
+                                                startIcon={
+                                                    <Image source={require('../assets/opain.png')} style={{
+                                                        resizeMode: "center",
+                                                        height: 100,
+                                                        width: 200
+                                                    }} />
+                                                }
+                                            />
+                                        </HStack>
+                                    </VStack>
                                 </VStack>
-                            </VStack>
-                        </Box>
+                            </Box>
 
 
-                        {/* </NativeBaseProvider> */}
-                        {/* </View> */}
+                            {/* </NativeBaseProvider> */}
+                            {/* </View> */}
+                        </View>
                     </View>
-                </View>
 
 
 
-            </ScrollView>
-            <Actionsheet isOpen={isOpen} onClose={onClose}>
-                <Actionsheet.Content>
-                    <Actionsheet.Item onPress={() => {
-                        onClose()
-                        openCamera()
-                    }}>Abrir cámara</Actionsheet.Item>
-                    <Actionsheet.Item onPress={() => {
-                        onClose()
-                        openImagePicker()
-                    }}>Abrir galería</Actionsheet.Item>
-                    <Actionsheet.Item onPress={onClose}>Cancelar</Actionsheet.Item>
-                </Actionsheet.Content>
-            </Actionsheet>
-        </NativeBaseProvider>
+                </ScrollView>
+                <Actionsheet isOpen={isOpen} onClose={onClose}>
+                    <Actionsheet.Content>
+                        <Actionsheet.Item onPress={() => {
+                            onClose()
+                            openCamera()
+                        }}>Abrir cámara</Actionsheet.Item>
+                        <Actionsheet.Item onPress={() => {
+                            onClose()
+                            openImagePicker()
+                        }}>Abrir galería</Actionsheet.Item>
+                        <Actionsheet.Item onPress={onClose}>Cancelar</Actionsheet.Item>
+                    </Actionsheet.Content>
+                </Actionsheet>
+            </NativeBaseProvider>
+        </KeyboardAvoidingWrapper>
 
     )
 }
