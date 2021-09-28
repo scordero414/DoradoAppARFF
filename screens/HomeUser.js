@@ -51,7 +51,6 @@ const HomeUser = (props) => {
     const logout = () => {
         auth.signOut().
             then(res => {
-                alert("Sesión Cerrada")
                 props.navigation.popToTop()
                     && props.navigation.navigate('Home');
             })
@@ -90,11 +89,14 @@ const HomeUser = (props) => {
                                 <View style={styles.topView}>
                                     <View style={{ marginTop: 100, justifyContent: 'center', alignItems: 'center', }}>
                                         {
-                                            user.img &&
-                                            (<Image alt="perfilUserImg"
-                                                source={{ uri: user.img }}
-                                                style={styles.image2}
-                                            />)
+                                            user.img !== null
+                                                ?
+                                                (<Image alt="perfilUserImg"
+                                                    source={{ uri: user.img }}
+                                                    style={styles.image2}
+                                                />)
+                                                :
+                                                <Spinner size="lg" />
 
                                         }
                                         < View justifyContent="center" alignItems="center">
@@ -118,49 +120,40 @@ const HomeUser = (props) => {
                                             ?
                                             <View >
                                                 <Box m={3}>
-                                                    <Accordion allowMultiple onAccordionOpen={getUsuarios()}>
+                                                    <Accordion allowMultiple >
                                                         <Accordion.Item>
                                                             <Accordion.Summary _expanded={{ backgroundColor: '#FFCA00' }}>
                                                                 Usuarios
                                                                 <Accordion.Icon />
                                                             </Accordion.Summary>
                                                             <Accordion.Details>
-                                                                <List space={2} my={2}>
-                                                                    {
-                                                                        usuarios.length !== 0
-                                                                            ?
-                                                                            (usuarios.map(item => (
-                                                                                (
-                                                                                    <List.Item key={item.id}>
-                                                                                        <Box flexDirection="row" justifyContent="space-between" >
-                                                                                            {item.nombre}
-                                                                                            <Select
-                                                                                                // color="#7dd3fc"
-                                                                                                selectedValue={item.state}
-                                                                                                minWidth={170}
-                                                                                                accessibilityLabel="Select your favorite programming language"
-                                                                                                placeholder={item.state === null ? "Elije un rango" : item.state}
-                                                                                                onValueChange={(itemValue) => setUserState(item.id, itemValue)}
-                                                                                                _selectedItem={{
-                                                                                                    bg: "cyan.600",
-                                                                                                    endIcon: <CheckIcon size={2} />,
-                                                                                                }}
-                                                                                            >
-                                                                                                <Select.Item label="Miembro" value="member" />
-                                                                                                <Select.Item label="Administrador" value="admin" />
-                                                                                            </Select>
-                                                                                        </Box>
-                                                                                    </List.Item>
-                                                                                )
-                                                                            )))
-                                                                            :
+                                                                {
+                                                                    usuarios.length !== 0
+                                                                        ?
+                                                                        (usuarios.map(item => (
                                                                             (
-                                                                                <List.Item>
-                                                                                    No hay usuarios.
-                                                                                </List.Item>
-                                                                            )
-                                                                    }
-                                                                </List>
+
+                                                                                <HStack my={2} key={item.id} alignItems="center" justifyContent="space-between">
+                                                                                    <Text>{item.nombre}</Text>
+                                                                                    <Select
+                                                                                        // color="#7dd3fc"
+                                                                                        selectedValue={item.state}
+                                                                                        minWidth={120}
+                                                                                        placeholder={item.state === null ? "Elije un rango" : item.state}
+                                                                                        onValueChange={(itemValue) => setUserState(item.id, itemValue)}
+                                                                                        _selectedItem={{
+                                                                                            bg: "cyan.600",
+                                                                                            endIcon: <CheckIcon size={2} />,
+                                                                                        }}
+                                                                                    >
+                                                                                        <Select.Item label="Member" value="member" />
+                                                                                        <Select.Item label="Admin" value="admin" />
+                                                                                    </Select>
+                                                                                </HStack>
+                                                                            ))))
+                                                                        :
+                                                                        <View></View>
+                                                                }
                                                             </Accordion.Details>
                                                         </Accordion.Item>
 
@@ -213,23 +206,9 @@ const HomeUser = (props) => {
                                             <View></View>
                                     }
 
-                                    {/* <View style={{ flex: 1, backgroundColor: "#1dd1a1" }}>
-                            <View style={styles.upperContainer}>
-                                <Text style={styles.loginText}>Register</Text>
-                            </View>
-                            <View style={styles.lowerContainer}>
-                                <AnimatedMultistep
-                                    steps={allSteps}
-                                    onFinish={this.finish}
-                                    animate={true}
-                                    onBack={this.onBack}
-                                    onNext={this.onNext}
-                                />
-                            </View>
-                        </View> */}
-                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', "SRhGnJDjjMMBwCgJFjK7") }}>
+                                    {/* <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', "SRhGnJDjjMMBwCgJFjK7") }}>
                                         Revisión
-                                    </Button>
+                                    </Button> */}
 
 
 

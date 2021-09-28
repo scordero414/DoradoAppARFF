@@ -22,7 +22,8 @@ import {
     Badge,
     Center,
     Avatar,
-    ScrollView
+    ScrollView,
+    Modal
 } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 import { store } from '../constants/keys'
@@ -30,6 +31,8 @@ import { store } from '../constants/keys'
 
 const Revision = (props) => {
 
+
+    const [showModal, setShowModal] = useState(false)
     const [revision, setRevision] = useState({
         user: null,
         date: null,
@@ -38,6 +41,7 @@ const Revision = (props) => {
     const [text, setText] = useState("");
 
     useEffect(() => {
+        setShowModal(true)
         if (revision.user == null)
             getRevisionById(props.route.params)
         knowEstatus()
@@ -75,7 +79,7 @@ const Revision = (props) => {
 
 
         setRevision({ ...revision, extintor: extintor_db, user: user_db, date: revision_db.ultima_modificacion.toDate() })
-
+        setShowModal(false)
     }
 
     const dateFormat = (date) => {
@@ -84,130 +88,150 @@ const Revision = (props) => {
 
     return (
         <NativeBaseProvider>
+            {
+                revision.user !== null ?
+                    (
 
-            <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
-                <HStack bg='#0c4a6e' px={1} py={3} justifyContent='space-between' alignItems='center'>
-                    <HStack mt={10} space={4} alignItems='center'>
-                        <IconButton onPress={() => props.navigation.goBack()} icon={<Icon size="sm" as={<MaterialIcons name='arrow-back' />} color="white" />} />
-                        <Text color="white" fontSize={20} fontWeight='bold'>Revision realizada</Text>
-                    </HStack>
-                </HStack>
-                <ScrollView>
-                    <Box
-                        p={2}
-                        w="95%"
-                        mx='auto'
-                    >
-                        {
-                            revision.user !== null
-                                ?
-                                <HStack shadow={8} bg="blueGray.50" rounded={10} mt={3}>
-
-                                    {
-                                        revision.user && <Image
-                                            m={4}
-                                            size={130}
-                                            alt="userImg"
-                                            borderRadius={100}
-                                            source={{
-                                                uri: revision.user.img,
-                                            }} />
-                                    }
-                                    <VStack flex={1} alignItems="center" space={3}>
-                                        <Heading mt={6} size="xs" fontSize={23} bold textAlign="center">
-                                            {revision.user.nombre}
-                                        </Heading>
-                                        <Text textAlign="center">{"Fecha revisión: " + dateFormat(revision.date)}</Text>
-                                    </VStack>
+                        <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
+                            <HStack bg='#0c4a6e' px={1} py={3} justifyContent='space-between' alignItems='center'>
+                                <HStack mt={10} space={4} alignItems='center'>
+                                    <IconButton onPress={() => props.navigation.goBack()} icon={<Icon size="sm" as={<MaterialIcons name='arrow-back' />} color="white" />} />
+                                    <Text color="white" fontSize={20} fontWeight='bold'>Revision realizada</Text>
                                 </HStack>
-                                :
-                                <View></View>
-                        }
-                        {
-                            revision.extintor !== null
-                                ?
-                                <VStack mt={5} shadow={8} bg="blueGray.100" rounded={10} mb={5}>
-                                    <Heading mt={3} size="xs" fontSize={23} bold textAlign="center">
-                                        {"Extintor " + revision.extintor.codigo}
-                                    </Heading>
-                                    {
-                                        revision.extintor && <Image
-                                            alignSelf="center"
-                                            m={4}
-                                            size={200}
-                                            alt="exrevision.extintorImg"
-                                            borderRadius={20}
-                                            source={{
-                                                uri: revision.extintor.foto,
-                                            }} />
-                                    }
-                                    <View ml={5} mr={5} mb={5}>
-                                        <Heading size="xs" fontSize={18} bold >
-                                            Ubicación:
-                                        </Heading>
-                                        <Text >{`${revision.extintor.terminal}, ${revision.extintor.ubicacion}, ${revision.extintor.ubicacionDetallada}, ${revision.extintor.ubicacionExacta}`}</Text>
-
-                                        <Divider my={3} bg="primary.900" thickness="2" />
-
-                                        <Heading size="xs" fontSize={18} bold >
-                                            Fechas importantes:
-                                        </Heading>
-                                        <HStack my={2} justifyContent="space-between">
-                                            <Text fontSize={"sm"} >
-                                                Recarga o mantenimiento:
-                                            </Text>
-                                            <Badge colorScheme="success">{dateFormat(revision.extintor.fechaRecarga.toDate())}</Badge>
-                                        </HStack>
-                                        <HStack my={2} justifyContent="space-between">
-                                            <Text fontSize={"sm"} >
-                                                Próxima recarga o mantenimiento:
-                                            </Text>
-                                            <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaRecarga.toDate())}</Badge>
-                                        </HStack>
-                                        <HStack my={2} justifyContent="space-between">
-                                            <Text fontSize={"sm"} >
-                                                Prueba hidrostática:
-                                            </Text>
-                                            <Badge colorScheme="success">{dateFormat(revision.extintor.fechaPruebaHidrostatica.toDate())}</Badge>
-                                        </HStack>
-                                        <HStack my={2} justifyContent="space-between">
-                                            <Text fontSize={"sm"} >
-                                                Próxima prueba hidrostática:
-                                            </Text>
-                                            <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaPruebaHidrostatica.toDate())}</Badge>
-                                        </HStack>
-
-                                        <Divider my={3} bg="primary.900" thickness="2" />
-
-                                        <Heading size="xs" fontSize={18} bold >
-                                            Revisar:
-                                        </Heading>
-                                        <Text fontSize={"sm"}> {text}</Text>
-
-                                        <Divider my={3} bg="primary.900" thickness="2" />
-
-                                        <Heading size="xs" fontSize={18} bold >
-                                            Observaciones:
-                                        </Heading>
-                                        <Text fontSize={"sm"}>{revision.extintor.observaciones}</Text>
-                                    </View>
-
-                                </VStack>
-                                :
-                                <View></View>
-                        }
-
-                        <Button mb={4} colorScheme="cyan" _text={{ color: 'white' }}>
-                            <HStack direction="row" space={3} alignItems="center">
-                                <Text fontSize="md" color='#ffffff'>Realizar nueva revisión</Text>
-                                <MaterialIcons name='edit' size={24} color="white" />
                             </HStack>
-                        </Button>
+                            <ScrollView>
+                                <Box
+                                    p={2}
+                                    w="95%"
+                                    mx='auto'
+                                >
+                                    {
+                                        revision.user !== null
+                                            ?
+                                            <HStack shadow={8} bg="blueGray.50" rounded={10} mt={3}>
 
-                    </Box>
+                                                {
+                                                    revision.user && <Image
+                                                        m={4}
+                                                        size={130}
+                                                        alt="userImg"
+                                                        borderRadius={100}
+                                                        source={{
+                                                            uri: revision.user.img,
+                                                        }} />
+                                                }
+                                                <VStack flex={1} alignItems="center" space={3}>
+                                                    <Heading mt={6} size="xs" fontSize={23} bold textAlign="center">
+                                                        {revision.user.nombre}
+                                                    </Heading>
+                                                    <Text textAlign="center">{"Fecha revisión: " + dateFormat(revision.date)}</Text>
+                                                </VStack>
+                                            </HStack>
+                                            :
+                                            <View></View>
+                                    }
+                                    {
+                                        revision.extintor !== null
+                                            ?
+                                            <VStack mt={5} shadow={8} bg="blueGray.100" rounded={10} mb={5}>
+                                                <Heading mt={3} size="xs" fontSize={23} bold textAlign="center">
+                                                    {"Extintor " + revision.extintor.codigo}
+                                                </Heading>
+                                                {
+                                                    revision.extintor && <Image
+                                                        alignSelf="center"
+                                                        m={4}
+                                                        size={200}
+                                                        alt="exrevision.extintorImg"
+                                                        borderRadius={20}
+                                                        source={{
+                                                            uri: revision.extintor.foto,
+                                                        }} />
+                                                }
+                                                <View ml={5} mr={5} mb={5}>
+                                                    <Heading size="xs" fontSize={18} bold >
+                                                        Ubicación:
+                                                    </Heading>
+                                                    <Text >{`${revision.extintor.terminal}, ${revision.extintor.ubicacion}, ${revision.extintor.ubicacionDetallada}, ${revision.extintor.ubicacionExacta}`}</Text>
 
-                </ScrollView>
-            </View>
+                                                    <Divider my={3} bg="primary.900" thickness="2" />
+
+                                                    <Heading size="xs" fontSize={18} bold >
+                                                        Fechas importantes:
+                                                    </Heading>
+                                                    <HStack my={2} justifyContent="space-between">
+                                                        <Text fontSize={"sm"} >
+                                                            Recarga o mantenimiento:
+                                                        </Text>
+                                                        <Badge colorScheme="success">{dateFormat(revision.extintor.fechaRecarga.toDate())}</Badge>
+                                                    </HStack>
+                                                    <HStack my={2} justifyContent="space-between">
+                                                        <Text fontSize={"sm"} >
+                                                            Próxima recarga o mantenimiento:
+                                                        </Text>
+                                                        <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaRecarga.toDate())}</Badge>
+                                                    </HStack>
+                                                    <HStack my={2} justifyContent="space-between">
+                                                        <Text fontSize={"sm"} >
+                                                            Prueba hidrostática:
+                                                        </Text>
+                                                        <Badge colorScheme="success">{dateFormat(revision.extintor.fechaPruebaHidrostatica.toDate())}</Badge>
+                                                    </HStack>
+                                                    <HStack my={2} justifyContent="space-between">
+                                                        <Text fontSize={"sm"} >
+                                                            Próxima prueba hidrostática:
+                                                        </Text>
+                                                        <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaPruebaHidrostatica.toDate())}</Badge>
+                                                    </HStack>
+
+                                                    <Divider my={3} bg="primary.900" thickness="2" />
+
+                                                    <Heading size="xs" fontSize={18} bold >
+                                                        Revisar:
+                                                    </Heading>
+                                                    <Text fontSize={"sm"}> {text}</Text>
+
+                                                    <Divider my={3} bg="primary.900" thickness="2" />
+
+                                                    <Heading size="xs" fontSize={18} bold >
+                                                        Observaciones:
+                                                    </Heading>
+                                                    <Text fontSize={"sm"}>{revision.extintor.observaciones}</Text>
+                                                </View>
+
+                                            </VStack>
+                                            :
+                                            <View></View>
+                                    }
+
+                                    <Button mb={4} colorScheme="cyan" _text={{ color: 'white' }}>
+                                        <HStack direction="row" space={3} alignItems="center">
+                                            <Text fontSize="md" color='#ffffff'>Realizar nueva revisión</Text>
+                                            <MaterialIcons name='edit' size={24} color="white" />
+                                        </HStack>
+                                    </Button>
+
+                                </Box>
+
+                            </ScrollView>
+                        </View>
+                    )
+                    :
+                    <View style={{flex: 1, backgroundColor: '#ffffff'}}>
+                        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+                            <Modal.Content>
+                                <Modal.Body alignItems="center">
+                                    <HStack space={2} alignItems="center">
+                                        <Spinner size="lg" />
+                                        <Heading color="primary.500" fontSize="md" textAlign="center">
+                                            Loading
+                                        </Heading>
+                                    </HStack>
+                                </Modal.Body>
+                            </Modal.Content>
+                        </Modal>
+                    </View>
+            }
         </NativeBaseProvider>
 
     )

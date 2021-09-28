@@ -144,7 +144,7 @@ const FinalStep = (props) => {
                 </Alert> :
                 <View></View>
             }
-            {idRevision !== null
+            {idRevision == null
                 ?
                 <HStack justifyContent="space-between">
                     <Button mt={5} colorScheme="cyan" _text={{ color: 'white' }} onPress={props.previousStep}>
