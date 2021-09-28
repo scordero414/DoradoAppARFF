@@ -34,8 +34,6 @@ const LogIn = (props) => {
         setLoading(true)
         auth.signInWithEmailAndPassword(email, password)
             .then(res => {
-                alert("Sesión Iniciada")
-
                 props.navigation.navigate('HomeUser', id = res.user.uid)
                 console.log(res.user.uid)
                 setLoading(false)

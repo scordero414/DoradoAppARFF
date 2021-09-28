@@ -112,7 +112,7 @@ const InfoQR = (props) => {
                 <HStack bg='#0c4a6e' px={1} py={3} justifyContent='space-between' alignItems='center'>
                     <HStack mt={10} space={4} alignItems='center'>
                         <IconButton onPress={() => props.navigation.goBack()} icon={<Icon size="sm" as={<MaterialIcons name='arrow-back' />} color="white" />} />
-                        <Text color="white" fontSize={20} fontWeight='bold'>Crear Extintor</Text>
+                        <Text color="white" fontSize={20} fontWeight='bold'>Realizar revisión de extintor</Text>
                     </HStack>
                 </HStack>
                 <Progress rounded="0" size="sm" colorScheme="primary" value={(((countStep + 1) * 100) / steps.length)} />

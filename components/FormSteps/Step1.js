@@ -90,7 +90,7 @@ const Step1 = (props) => {
     return (
         <View>
             <ScrollView>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null}>
                     <Box
                         p={2}
                         w="90%"

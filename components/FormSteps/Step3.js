@@ -67,7 +67,7 @@ const Step3 = (props) => {
                 Peso total (Co2)
             </FormControl.Label>
             <HStack justifyContent="space-between">
-                <Input minWidth={175} value={props.extintor.pesoTotal} variant="outline" keyboardType="decimal-pad" onChangeText={(text) => {
+                <Input minWidth={175} value={props.extintor.pesoTotal} variant="outline"  onChangeText={(text) => {
                     props.extintor.pesoTotal = text
                     // setExtintor({
                     //     ...extintor,

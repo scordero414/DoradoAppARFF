@@ -7,7 +7,6 @@ import LogIn from './screens/LogIn';
 import Home from './screens/Home';
 import HomeUser from './screens/HomeUser';
 import InfoQR from './screens/InfoQR';
-import ScannedQR from './screens/ScannedQR';
 import Revision from './screens/Revision';
 
 const Stack = createStackNavigator();
@@ -21,7 +20,6 @@ function MyStack() {
       <Stack.Screen name="CreateUser" component={CreateUser} />
       <Stack.Screen name="HomeUser" component={HomeUser} />
       <Stack.Screen name="InfoQR" component={InfoQR} />
-      <Stack.Screen name="ScannedQR" component={ScannedQR} />
       <Stack.Screen name="Revision" component={Revision} />
       {/* <Stack.Screen name="UserDetails" component={UserDetails}/> */}
     </Stack.Navigator>

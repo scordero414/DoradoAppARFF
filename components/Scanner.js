@@ -18,11 +18,8 @@ const Scanner = (props) => {
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        alert(data);
-        console.log(props)
         props.props.navigation.navigate('Revision', data)
         props.onChange(false);
-        // props.props.navigation.navigate('ScannedQR', data)
     };
 
     if (hasPermission === null) {

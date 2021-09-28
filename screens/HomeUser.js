@@ -1,4 +1,4 @@
-import { NativeBaseProvider, View, VStack, HStack, Image, Stack, Spinner, Heading, IconButton, Box, Flex, Spacer, Button, Text, CheckIcon, Accordion, Select, Content, Alert, List } from 'native-base'
+import { NativeBaseProvider, View, Center, VStack, HStack, Modal, Image, Stack, Spinner, Heading, IconButton, Box, Flex, Spacer, Button, Text, CheckIcon, Accordion, Select, Content, Alert, List } from 'native-base'
 import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, ScrollView, Share } from 'react-native'
 import { auth, store } from '../constants/keys'
@@ -6,13 +6,10 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import Scanner from '../components/Scanner';
 
 
-
-
-
 const HomeUser = (props) => {
 
     const [qrCodeScanner, setQrCodeScanner] = useState(false)
-    // const [qrCodeImg, setQrCodeImg] = useState(null)
+
     const [user, setUser] = useState({
         id: '',
         nombre: '',
@@ -24,9 +21,9 @@ const HomeUser = (props) => {
     const [loading, setLoading] = useState(false)
     const [usuarios, setUsuarios] = useState([])
 
-    const getUserById = async (id) => {
-        // console.log(id)
+    const [showModal, setShowModal] = useState(false)
 
+    const getUserById = async (id) => {
         const dbRef = store.collection("usuarios").doc(id)
         const doc = await dbRef.get()
         const user = doc.data()
@@ -34,19 +31,15 @@ const HomeUser = (props) => {
             ...user,
             id: doc.id,
         })
-
+        setShowModal(false)
     }
 
-    const [text, setText] = React.useState('');
-    const hasUnsavedChanges = Boolean(text);
-
     useEffect(() => {
-        setLoading(true)
-        console.log(props.navigation.canGoBack)
-        props.navigation.canGoBack = false
+        setShowModal(true)
+        // setLoading(true)
         getUserById(props.route.params)
         getUsuarios()
-        setLoading(false)
+        // setLoading(false)
     }, [])
 
     const goCreateQR = () => {
@@ -86,150 +79,141 @@ const HomeUser = (props) => {
         setQrCodeScanner(newValue);
     }
 
-
-    // const captureScreenshot = () => {
-
-    // }
-    // captureScreen({
-    //     format: "jpg",
-    //     quality: 0.8
-    //   }).then(
-    //     uri => console.log("Image saved to", uri),
-    //     error => console.error("Oops, snapshot failed", error)
-    //   );
     return (
         <NativeBaseProvider>
+            {
+                user.img !== null ?
+                    (
+                        <View style={styles.container}>
 
-            <View style={styles.container}>
-                <ScrollView >
-                    <View style={styles.topView}>
-                        <View style={{ marginTop: 100, justifyContent: 'center', alignItems: 'center', }}>
-                            {
-                                user.img !== null ?
-                                    (<Image alt="perfilUserImg"
-                                        source={{ uri: user.img }}
-                                        style={styles.image2}
-                                    />) :
-                                    (<Spinner size="lg" />)
-
-                            }
-                            < View justifyContent="center" alignItems="center">
-                                <Text fontSize="xl" color='#ffffff'>{user.nombre}</Text>
-                                <Text fontSize="md" color='#ffffff'>{user.email}</Text>
-
-                            </View>
-
-                        </View>
-                        <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => logout()}>
-                            <Stack direction="row" space={3} alignItems="center">
-                                <Text fontSize="md" color='#ffffff'>Cerrar Sesión</Text>
-                                <SimpleLineIcons name="logout" size={24} color="white" />
-                            </Stack>
-                        </Button>
-                    </View>
-
-                    <View style={styles.bottonView}>
-                        {
-                            user.state === "admin"
-                                ?
-                                <View >
-                                    <Box m={3}>
-                                        <Accordion allowMultiple onAccordionOpen={getUsuarios()}>
-                                            <Accordion.Item>
-                                                <Accordion.Summary _expanded={{ backgroundColor: '#FFCA00' }}>
-                                                    Usuarios
-                                                    <Accordion.Icon />
-                                                </Accordion.Summary>
-                                                <Accordion.Details>
-                                                    <List space={2} my={2}>
-                                                        {
-                                                            usuarios.length !== 0
-                                                                ?
-                                                                (usuarios.map(item => (
-                                                                    (
-                                                                        <List.Item key={item.id}>
-                                                                            <Box flexDirection="row" justifyContent="space-between" >
-                                                                                {item.nombre}
-                                                                                <Select
-                                                                                    // color="#7dd3fc"
-                                                                                    selectedValue={item.state}
-                                                                                    minWidth={170}
-                                                                                    accessibilityLabel="Select your favorite programming language"
-                                                                                    placeholder={item.state === null ? "Elije un rango" : item.state}
-                                                                                    onValueChange={(itemValue) => setUserState(item.id, itemValue)}
-                                                                                    _selectedItem={{
-                                                                                        bg: "cyan.600",
-                                                                                        endIcon: <CheckIcon size={2} />,
-                                                                                    }}
-                                                                                >
-                                                                                    <Select.Item label="Miembro" value="member" />
-                                                                                    <Select.Item label="Administrador" value="admin" />
-                                                                                </Select>
-                                                                            </Box>
-                                                                        </List.Item>
-                                                                    )
-                                                                )))
-                                                                :
-                                                                (
-                                                                    <List.Item>
-                                                                        No hay usuarios.
-                                                                    </List.Item>
-                                                                )
-                                                        }
-                                                    </List>
-                                                </Accordion.Details>
-                                            </Accordion.Item>
-
-                                        </Accordion>
-                                    </Box>
-
-                                </View>
-                                :
-                                <View></View>
-                        }
-                        {
-                            (user.state === "member" | user.state === "admin")
-                                ?
-                                <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => setQrCodeScanner(!qrCodeScanner)}>
-                                    <Stack direction="row" space={3} alignItems="center">
-                                        <Text fontSize="md" color='#ffffff'>Escanear Código QR</Text>
-                                        <SimpleLineIcons name="logout" size={24} color="white" />
-                                    </Stack>
-                                </Button>
-                                :
-                                <View></View>
-                        }
-                        {
-                            qrCodeScanner
-                                ?
-                                <Scanner props={props} onChange={handleChange}></Scanner>
-                                :
-                                <View></View>
-                        }
-                        {
-                            (user.state === "member" | user.state === "admin")
-                                ?
-                                <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => goCreateQR()}>
-                                    <Stack direction="row" space={3} alignItems="center">
+                            <ScrollView >
+                                <View style={styles.topView}>
+                                    <View style={{ marginTop: 100, justifyContent: 'center', alignItems: 'center', }}>
                                         {
-                                            loading
-                                                ?
-                                                (
-                                                    <View>
-                                                        {/* <Text>Iniciar Sesión</Text> */}
-                                                        <Spinner accessibilityLabel="Loading posts" />
-                                                    </View>
-                                                )
-                                                :
-                                                <Text fontSize="md" color='#ffffff'>Crear Código QR</Text>
-                                        }
-                                    </Stack>
-                                </Button>
-                                :
-                                <View></View>
-                        }
+                                            user.img &&
+                                            (<Image alt="perfilUserImg"
+                                                source={{ uri: user.img }}
+                                                style={styles.image2}
+                                            />)
 
-                        {/* <View style={{ flex: 1, backgroundColor: "#1dd1a1" }}>
+                                        }
+                                        < View justifyContent="center" alignItems="center">
+                                            <Text fontSize="xl" color='#ffffff'>{user.nombre}</Text>
+                                            <Text fontSize="md" color='#ffffff'>{user.email}</Text>
+
+                                        </View>
+
+                                    </View>
+                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => logout()}>
+                                        <Stack direction="row" space={3} alignItems="center">
+                                            <Text fontSize="md" color='#ffffff'>Cerrar Sesión</Text>
+                                            <SimpleLineIcons name="logout" size={24} color="white" />
+                                        </Stack>
+                                    </Button>
+                                </View>
+
+                                <View style={styles.bottonView}>
+                                    {
+                                        user.state === "admin"
+                                            ?
+                                            <View >
+                                                <Box m={3}>
+                                                    <Accordion allowMultiple onAccordionOpen={getUsuarios()}>
+                                                        <Accordion.Item>
+                                                            <Accordion.Summary _expanded={{ backgroundColor: '#FFCA00' }}>
+                                                                Usuarios
+                                                                <Accordion.Icon />
+                                                            </Accordion.Summary>
+                                                            <Accordion.Details>
+                                                                <List space={2} my={2}>
+                                                                    {
+                                                                        usuarios.length !== 0
+                                                                            ?
+                                                                            (usuarios.map(item => (
+                                                                                (
+                                                                                    <List.Item key={item.id}>
+                                                                                        <Box flexDirection="row" justifyContent="space-between" >
+                                                                                            {item.nombre}
+                                                                                            <Select
+                                                                                                // color="#7dd3fc"
+                                                                                                selectedValue={item.state}
+                                                                                                minWidth={170}
+                                                                                                accessibilityLabel="Select your favorite programming language"
+                                                                                                placeholder={item.state === null ? "Elije un rango" : item.state}
+                                                                                                onValueChange={(itemValue) => setUserState(item.id, itemValue)}
+                                                                                                _selectedItem={{
+                                                                                                    bg: "cyan.600",
+                                                                                                    endIcon: <CheckIcon size={2} />,
+                                                                                                }}
+                                                                                            >
+                                                                                                <Select.Item label="Miembro" value="member" />
+                                                                                                <Select.Item label="Administrador" value="admin" />
+                                                                                            </Select>
+                                                                                        </Box>
+                                                                                    </List.Item>
+                                                                                )
+                                                                            )))
+                                                                            :
+                                                                            (
+                                                                                <List.Item>
+                                                                                    No hay usuarios.
+                                                                                </List.Item>
+                                                                            )
+                                                                    }
+                                                                </List>
+                                                            </Accordion.Details>
+                                                        </Accordion.Item>
+
+                                                    </Accordion>
+                                                </Box>
+
+                                            </View>
+                                            :
+                                            <View></View>
+                                    }
+                                    {
+                                        (user.state === "member" | user.state === "admin")
+                                            ?
+                                            <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => setQrCodeScanner(!qrCodeScanner)}>
+                                                <Stack direction="row" space={3} alignItems="center">
+                                                    <Text fontSize="md" color='#ffffff'>Escanear Código QR</Text>
+                                                    <SimpleLineIcons name="logout" size={24} color="white" />
+                                                </Stack>
+                                            </Button>
+                                            :
+                                            <View></View>
+                                    }
+                                    {
+                                        qrCodeScanner
+                                            ?
+                                            <Scanner props={props} onChange={handleChange}></Scanner>
+                                            :
+                                            <View></View>
+                                    }
+                                    {
+                                        (user.state === "member" | user.state === "admin")
+                                            ?
+                                            <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => goCreateQR()}>
+                                                <Stack direction="row" space={3} alignItems="center">
+                                                    {
+                                                        loading
+                                                            ?
+                                                            (
+                                                                <View>
+                                                                    {/* <Text>Iniciar Sesión</Text> */}
+                                                                    <Spinner accessibilityLabel="Loading posts" />
+                                                                </View>
+                                                            )
+                                                            :
+                                                            <Text fontSize="md" color='#ffffff'>Crear Código QR</Text>
+                                                    }
+                                                </Stack>
+                                            </Button>
+                                            :
+                                            <View></View>
+                                    }
+
+                                    {/* <View style={{ flex: 1, backgroundColor: "#1dd1a1" }}>
                             <View style={styles.upperContainer}>
                                 <Text style={styles.loginText}>Register</Text>
                             </View>
@@ -243,16 +227,32 @@ const HomeUser = (props) => {
                                 />
                             </View>
                         </View> */}
-                        <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => {props.navigation.navigate('Revision', "SRhGnJDjjMMBwCgJFjK7" )}}>
-                            Revisión
-                        </Button>
+                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', "SRhGnJDjjMMBwCgJFjK7") }}>
+                                        Revisión
+                                    </Button>
 
 
 
+                                </View>
+                            </ScrollView>
+                        </View>
+                    )
+                    :
+                    <View style={styles.container}>
+                        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+                            <Modal.Content>
+                                <Modal.Body alignItems="center">
+                                    <HStack space={2} alignItems="center">
+                                        <Spinner size="lg" />
+                                        <Heading color="primary.500" fontSize="md" textAlign="center">
+                                            Loading
+                                        </Heading>
+                                    </HStack>
+                                </Modal.Body>
+                            </Modal.Content>
+                        </Modal>
                     </View>
-                </ScrollView>
-            </View>
-
+            }
         </NativeBaseProvider >
 
     )

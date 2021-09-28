@@ -133,7 +133,6 @@ const CreateUser = (props) => {
                     state: null
                 }
                 store.collection('usuarios').doc(res.user.uid).set(usuario)
-                alert("Usuario Registrado exitosamente")
                 props.navigation.navigate('HomeUser', res.user.uid)
                 // guardarInfoUser(usuario, res.user.uid)
                 setLoading(false)

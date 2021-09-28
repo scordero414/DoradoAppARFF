@@ -184,6 +184,12 @@ const Revision = (props) => {
                                         </Heading>
                                         <Text fontSize={"sm"}> {text}</Text>
 
+                                        <Divider my={3} bg="primary.900" thickness="2" />
+
+                                        <Heading size="xs" fontSize={18} bold >
+                                            Observaciones:
+                                        </Heading>
+                                        <Text fontSize={"sm"}>{revision.extintor.observaciones}</Text>
                                     </View>
 
                                 </VStack>
