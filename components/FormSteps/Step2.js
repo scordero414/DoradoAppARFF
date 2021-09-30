@@ -62,10 +62,10 @@ function useInput(dateS) {
 const Step2 = (props) => {
     const textColor = { color: 'muted.700', fontSize: 'sm', fontWeight: 600 }
 
-    const fechaRecarga = useInput(props.extintor.fechaRecarga !== null ? new Date(Date.parse(props.extintor.fechaRecarga)) : new Date());
-    const fechaProximaRecarga = useInput(props.extintor.fechaProximaRecarga !== null ? new Date(Date.parse(props.extintor.fechaProximaRecarga)) : new Date());
-    const fechaPruebaHidrostatica = useInput(props.extintor.fechaPruebaHidrostatica !== null ? new Date(Date.parse(props.extintor.fechaPruebaHidrostatica)) : new Date());
-    const fechaProximaPruebaHidrostatica = useInput(props.extintor.fechaProximaPruebaHidrostatica !== null ? new Date(Date.parse(props.extintor.fechaProximaPruebaHidrostatica)) : new Date());
+    const fechaRecarga = useInput(props.extintor.fechaRecarga !== null ? new Date(props.extintor.fechaRecarga) : new Date());
+    const fechaProximaRecarga = useInput(props.extintor.fechaProximaRecarga !== null ? new Date(props.extintor.fechaProximaRecarga) : new Date());
+    const fechaPruebaHidrostatica = useInput(props.extintor.fechaPruebaHidrostatica !== null ? new Date(props.extintor.fechaPruebaHidrostatica) : new Date());
+    const fechaProximaPruebaHidrostatica = useInput(props.extintor.fechaProximaPruebaHidrostatica !== null ? new Date(props.extintor.fechaProximaPruebaHidrostatica) : new Date());
 
     const saveDates = () => {
         props.extintor.fechaRecarga = fechaRecarga.date;

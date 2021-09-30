@@ -38,14 +38,24 @@ const Revision = (props) => {
         date: null,
         extintor: null
     });
+    const [revisionIds, setRevisionIds] = useState(null);
     const [text, setText] = useState("");
 
     useEffect(() => {
         setShowModal(true)
         if (revision.user == null)
-            getRevisionById(props.route.params)
+            getRevisionById(props.route.params.idExtintor);
         knowEstatus()
-        // console.log(revision)
+
+        if (revision.extintor !== null) {
+            if (!(revision.extintor.fechaRecarga.seconds == undefined)) {
+                revision.extintor.fechaProximaRecarga = revision.extintor.fechaProximaRecarga.toDate();
+                revision.extintor.fechaRecarga = revision.extintor.fechaRecarga.toDate();
+                revision.extintor.fechaPruebaHidrostatica = revision.extintor.fechaPruebaHidrostatica.toDate();
+                revision.extintor.fechaProximaPruebaHidrostatica = revision.extintor.fechaProximaPruebaHidrostatica.toDate();
+            }
+
+        }
     }, [revision])
 
     const knowEstatus = () => {
@@ -77,13 +87,20 @@ const Revision = (props) => {
         const extintor_db = doc_extintor.data()
         // revision.extintor = extintor_db;
 
+        setRevisionIds(id)
 
         setRevision({ ...revision, extintor: extintor_db, user: user_db, date: revision_db.ultima_modificacion.toDate() })
+        // console.log(extintor_db.fechaProximaRecarga)
         setShowModal(false)
     }
 
     const dateFormat = (date) => {
         return ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear()
+    }
+
+    const goNewRevision = () => {
+
+        props.navigation.navigate('InfoQR', { revision: revision, revisionId: revisionIds, userId: props.route.params.userId })
     }
 
     return (
@@ -108,7 +125,7 @@ const Revision = (props) => {
                                     {
                                         revision.user !== null
                                             ?
-                                            <HStack shadow={8} bg="blueGray.50" rounded={10} mt={3}>
+                                            <HStack shadow={8} bg="blueGray.50" rounded={10} mt={3} justifyContent="center">
 
                                                 {
                                                     revision.user && <Image
@@ -159,30 +176,39 @@ const Revision = (props) => {
                                                     <Heading size="xs" fontSize={18} bold >
                                                         Fechas importantes:
                                                     </Heading>
-                                                    <HStack my={2} justifyContent="space-between">
-                                                        <Text fontSize={"sm"} >
-                                                            Recarga o mantenimiento:
-                                                        </Text>
-                                                        <Badge colorScheme="success">{dateFormat(revision.extintor.fechaRecarga.toDate())}</Badge>
-                                                    </HStack>
-                                                    <HStack my={2} justifyContent="space-between">
-                                                        <Text fontSize={"sm"} >
-                                                            Próxima recarga o mantenimiento:
-                                                        </Text>
-                                                        <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaRecarga.toDate())}</Badge>
-                                                    </HStack>
-                                                    <HStack my={2} justifyContent="space-between">
-                                                        <Text fontSize={"sm"} >
-                                                            Prueba hidrostática:
-                                                        </Text>
-                                                        <Badge colorScheme="success">{dateFormat(revision.extintor.fechaPruebaHidrostatica.toDate())}</Badge>
-                                                    </HStack>
-                                                    <HStack my={2} justifyContent="space-between">
-                                                        <Text fontSize={"sm"} >
-                                                            Próxima prueba hidrostática:
-                                                        </Text>
-                                                        <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaPruebaHidrostatica.toDate())}</Badge>
-                                                    </HStack>
+                                                    {
+                                                        (revision.extintor.fechaRecarga.seconds == undefined)
+                                                            ?
+                                                            <View>
+                                                                <HStack my={2} justifyContent="space-between">
+                                                                    <Text fontSize={"sm"} >
+                                                                        Recarga o mantenimiento:
+                                                                    </Text>
+                                                                    <Badge colorScheme="success">{dateFormat(revision.extintor.fechaRecarga)}</Badge>
+                                                                </HStack>
+                                                                <HStack my={2} justifyContent="space-between">
+                                                                    <Text fontSize={"sm"} >
+                                                                        Próxima recarga o mantenimiento:
+                                                                    </Text>
+                                                                    <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaRecarga)}</Badge>
+                                                                </HStack>
+                                                                <HStack my={2} justifyContent="space-between">
+                                                                    <Text fontSize={"sm"} >
+                                                                        Prueba hidrostática:
+                                                                    </Text>
+                                                                    <Badge colorScheme="success">{dateFormat(revision.extintor.fechaPruebaHidrostatica)}</Badge>
+                                                                </HStack>
+                                                                <HStack my={2} justifyContent="space-between">
+                                                                    <Text fontSize={"sm"} >
+                                                                        Próxima prueba hidrostática:
+                                                                    </Text>
+                                                                    <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaPruebaHidrostatica)}</Badge>
+                                                                </HStack>
+                                                            </View>
+                                                            :
+                                                            <Spinner/>
+                                                    }
+
 
                                                     <Divider my={3} bg="primary.900" thickness="2" />
 
@@ -204,7 +230,7 @@ const Revision = (props) => {
                                             <View></View>
                                     }
 
-                                    <Button mb={4} colorScheme="cyan" _text={{ color: 'white' }}>
+                                    <Button mb={4} colorScheme="cyan" _text={{ color: 'white' }} onPress={goNewRevision}>
                                         <HStack direction="row" space={3} alignItems="center">
                                             <Text fontSize="md" color='#ffffff'>Realizar nueva revisión</Text>
                                             <MaterialIcons name='edit' size={24} color="white" />
@@ -217,7 +243,7 @@ const Revision = (props) => {
                         </View>
                     )
                     :
-                    <View style={{flex: 1, backgroundColor: '#ffffff'}}>
+                    <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
                         <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
                             <Modal.Content>
                                 <Modal.Body alignItems="center">

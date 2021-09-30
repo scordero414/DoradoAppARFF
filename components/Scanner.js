@@ -18,7 +18,7 @@ const Scanner = (props) => {
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        props.props.navigation.navigate('Revision', data)
+        props.props.navigation.navigate('Revision', {idExtintor: data, userId: props.userId})
         props.onChange(false);
     };
 

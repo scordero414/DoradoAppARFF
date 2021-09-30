@@ -44,7 +44,7 @@ const HomeUser = (props) => {
 
     const goCreateQR = () => {
         setLoading(true)
-        props.navigation.navigate('InfoQR', user.id)
+        props.navigation.navigate('InfoQR', {revision: null, revisionId: null, userId: user.id})
         setLoading(false)
     }
 
@@ -179,7 +179,7 @@ const HomeUser = (props) => {
                                     {
                                         qrCodeScanner
                                             ?
-                                            <Scanner props={props} onChange={handleChange}></Scanner>
+                                            <Scanner props={props} userId={user.id} onChange={handleChange}></Scanner>
                                             :
                                             <View></View>
                                     }
@@ -206,9 +206,9 @@ const HomeUser = (props) => {
                                             <View></View>
                                     }
 
-                                    {/* <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', "SRhGnJDjjMMBwCgJFjK7") }}>
+                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', {idExtintor: "SRhGnJDjjMMBwCgJFjK7", userId: user.id}) }}>
                                         Revisión
-                                    </Button> */}
+                                    </Button>
 
 
 

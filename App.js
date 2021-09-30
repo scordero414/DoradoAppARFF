@@ -11,6 +11,9 @@ import Revision from './screens/Revision';
 
 const Stack = createStackNavigator();
 LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 function MyStack() {
   return (

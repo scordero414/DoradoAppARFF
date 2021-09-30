@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, Share, Platform } from 'react-native'
 import {
     NativeBaseProvider,
@@ -29,15 +29,11 @@ import Step4 from '../components/FormSteps/Step4';
 import Step5 from '../components/FormSteps/Step5';
 import Step6 from '../components/FormSteps/Step6';
 import FinalStep from '../components/FormSteps/FinalStep';
+import FinalUpdateStep from '../components/FormSteps/FinalUpdateStep';
 
 const InfoQR = (props) => {
 
-    const [createQr, setCreateQr] = useState(false)
-    const viewShotRef = useRef()
-
-    const [error, setError] = useState(null)
-
-    const [extintor, setExtintor] = useState({
+    const [extintor, setExtintor] = useState(props.route.params.revision ? props.route.params.revision.extintor : ({
         foto: null,
         codigo: null,
         terminal: null,
@@ -74,8 +70,11 @@ const InfoQR = (props) => {
         demarcacion: null,
         tarjetaInspeccionMensual: null,
         observaciones: null
-    })
+    }))
 
+    useEffect(() => {
+        console.log(props.route.params.revisionId)
+    }, [])
 
     const [countStep, setCountStep] = useState(0)
 
@@ -98,7 +97,10 @@ const InfoQR = (props) => {
         <Step4 extintor={extintor} setExtintorValues={setExtintorValues} previousStep={previousStep} nextStep={nextStep}></Step4>,
         <Step5 extintor={extintor} setExtintorValues={setExtintorValues} previousStep={previousStep} nextStep={nextStep}></Step5>,
         <Step6 extintor={extintor} setExtintorValues={setExtintorValues} previousStep={previousStep} nextStep={nextStep}></Step6>,
-        <FinalStep extintor={extintor} previousStep={previousStep} userId={props.route.params}></FinalStep>
+        props.route.params.revisionId ?
+            <FinalUpdateStep navigation={props.navigation} extintor={extintor} previousStep={previousStep} revisionId={props.route.params.revisionId} userId={props.route.params.userId}></FinalUpdateStep>
+            :
+            <FinalStep extintor={extintor} previousStep={previousStep} userId={props.route.params}></FinalStep>
     ];
 
     return (
@@ -116,22 +118,22 @@ const InfoQR = (props) => {
                     </HStack>
                 </HStack>
                 <Progress rounded="0" size="sm" colorScheme="primary" value={(((countStep + 1) * 100) / steps.length)} />
-                
-                    <Box
-                        flex={1}
-                        w="100%"
-                    >
-                        <VStack space={2} mt={5}>
 
-                            
-                                {
-                                    steps[countStep]
-                                }
-                            {/* </KeyboardAvoidingView> */}
-                        </VStack>
+                <Box
+                    flex={1}
+                    w="100%"
+                >
+                    <VStack space={2} mt={5}>
 
 
-                    </Box>
+                        {
+                            steps[countStep]
+                        }
+                        {/* </KeyboardAvoidingView> */}
+                    </VStack>
+
+
+                </Box>
                 {/* </ScrollView> */}
             </View>
         </NativeBaseProvider >

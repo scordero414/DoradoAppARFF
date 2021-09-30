@@ -45,6 +45,9 @@ const LogIn = (props) => {
                 else if (e.code === "auth/user-not-found") {
                     setError("Usuario no registrado")
                 }
+                else if (e.code === "auth/invalid-email") {
+                    setError("Ingresa un email correcto")
+                }
                 console.log(e.code)
                 setLoading(false)
             })
