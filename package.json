@@ -13,6 +13,7 @@
     "@react-native-community/datetimepicker": "3.5.2",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
+    "ansi-regex": "^6.0.1",
     "expo": "~42.0.1",
     "expo-barcode-scanner": "~10.2.2",
     "expo-image-picker": "~10.2.2",
@@ -22,9 +23,11 @@
     "expo-status-bar": "~1.0.4",
     "firebase": "8.2.3",
     "native-base": "^3.0.3",
+    "node-fetch": "^3.0.0",
+    "nth-check": "^2.0.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native": "^0.65.1",
     "react-native-animated-multistep": "^1.1.1",
     "react-native-custom-qr-codes-expo": "^2.2.0",
     "react-native-gesture-handler": "^1.10.3",
@@ -40,8 +43,12 @@
     "react-native-svg": "12.1.1",
     "react-native-view-shot": "^3.1.2",
     "react-native-web": "~0.13.12",
+    "set-value": "^4.1.0",
     "styled-components": "^5.3.0",
-    "styled-system": "^5.1.5"
+    "styled-system": "^5.1.5",
+    "tmpl": "^1.0.5",
+    "url-parse": "^1.5.3",
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
