@@ -162,10 +162,9 @@ const CreateUser = (props) => {
                     <ImageBackground source={require('../assets/nubes.png')} style={styles.fondo}>
                         <View style={styles.brandView}>
                             <Image source={require('../assets/eldorado.png')} style={{
-                                resizeMode: "center",
                                 height: 100,
                                 width: 200
-                            }} />
+                            }} resizeMode="contain" />
                         </View>
 
                     </ImageBackground>
@@ -274,10 +273,9 @@ const CreateUser = (props) => {
                                                 variant='unstyled'
                                                 startIcon={
                                                     <Image source={require('../assets/opain.png')} style={{
-                                                        resizeMode: "center",
                                                         height: 100,
                                                         width: 200
-                                                    }} />
+                                                    }} resizeMode="contain"/>
                                                 }
                                             />
                                         </HStack>

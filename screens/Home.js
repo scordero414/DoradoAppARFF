@@ -13,10 +13,9 @@ const Home = (props) => {
                 <VStack mt={10}>
                     <HStack justifyContent="center" alignItem='center' >
                         <Image source={require('../assets/eldorado.png')} style={{
-                            resizeMode: "center",
                             height: 100,
                             width: 200
-                        }} />
+                        }} resizeMode="contain"/>
                     </HStack>
                         <Carousel data={dummyData} />
                     {/* <Heading mt={10} color="#0c4a6e">El Dorado ARFFS </Heading> */}
@@ -32,10 +31,9 @@ const Home = (props) => {
                                 variant='unstyled'
                                 startIcon={
                                     <Image source={require('../assets/opain.png')} style={{
-                                        resizeMode: "center",
                                         height: 100,
                                         width: 200
-                                    }} />
+                                    }} resizeMode="contain"/>
                                 }
                             />
                         </HStack>

@@ -60,11 +60,10 @@ const LogIn = (props) => {
 
                 <ImageBackground source={require('../assets/nubes.png')} style={styles.fondo}>
                     <View style={styles.brandView}>
-                        <Image alt="eldoradoImg" source={require('../assets/eldorado.png')} style={{
-                            resizeMode: "center",
+                        <Image source={require('../assets/eldorado.png')} style={{
                             height: 100,
                             width: 200
-                        }} />
+                        }} resizeMode="contain" />
                     </View>
 
                 </ImageBackground>
@@ -133,11 +132,10 @@ const LogIn = (props) => {
                                             <IconButton
                                                 variant='unstyled'
                                                 startIcon={
-                                                    <Image alt="opainImg" source={require('../assets/opain.png')} style={{
-                                                        resizeMode: "center",
+                                                    <Image source={require('../assets/opain.png')} style={{
                                                         height: 100,
                                                         width: 200
-                                                    }} />
+                                                    }} resizeMode="contain"/>
                                                 }
                                             />
                                         </HStack>

@@ -2,7 +2,7 @@ import { NativeBaseProvider, View, Center, VStack, HStack, Modal, Image, Stack, 
 import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, ScrollView, Share } from 'react-native'
 import { auth, store } from '../constants/keys'
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
 import Scanner from '../components/Scanner';
 
 
@@ -170,7 +170,7 @@ const HomeUser = (props) => {
                                             <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => setQrCodeScanner(!qrCodeScanner)}>
                                                 <Stack direction="row" space={3} alignItems="center">
                                                     <Text fontSize="md" color='#ffffff'>Escanear Código QR</Text>
-                                                    <SimpleLineIcons name="logout" size={24} color="white" />
+                                                    <MaterialIcons name='qr-code-scanner' size={24} color="white" />
                                                 </Stack>
                                             </Button>
                                             :
@@ -206,9 +206,9 @@ const HomeUser = (props) => {
                                             <View></View>
                                     }
 
-                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', {idExtintor: "SRhGnJDjjMMBwCgJFjK7", userId: user.id}) }}>
+                                    {/* <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', {idExtintor: "SRhGnJDjjMMBwCgJFjK7", userId: user.id}) }}>
                                         Revisión
-                                    </Button>
+                                    </Button> */}
 
 
 
