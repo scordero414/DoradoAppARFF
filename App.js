@@ -21,10 +21,9 @@ function MyStack() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="LogIn" component={LogIn} />
       <Stack.Screen name="CreateUser" component={CreateUser} />
-      <Stack.Screen name="HomeUser" component={HomeUser} />
+      <Stack.Screen name="HomeUser" component={HomeUser} options={{gestureEnabled: false}}/>
       <Stack.Screen name="InfoQR" component={InfoQR} />
       <Stack.Screen name="Revision" component={Revision} />
-      {/* <Stack.Screen name="UserDetails" component={UserDetails}/> */}
     </Stack.Navigator>
   )
 }
