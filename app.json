@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "owner": "scordero414",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/dorado.png",
     "splash": {
       "image": "./assets/nubes.png",
       "resizeMode": "cover",

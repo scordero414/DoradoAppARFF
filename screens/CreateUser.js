@@ -164,7 +164,7 @@ const CreateUser = (props) => {
                             <Image source={require('../assets/eldorado.png')} style={{
                                 height: 100,
                                 width: 200
-                            }} resizeMode="contain" />
+                            }} resizeMode="contain" alt="doradoLogo" />
                         </View>
 
                     </ImageBackground>
@@ -275,7 +275,7 @@ const CreateUser = (props) => {
                                                     <Image source={require('../assets/opain.png')} style={{
                                                         height: 100,
                                                         width: 200
-                                                    }} resizeMode="contain"/>
+                                                    }} resizeMode="contain" alt="opainLogo"/>
                                                 }
                                             />
                                         </HStack>

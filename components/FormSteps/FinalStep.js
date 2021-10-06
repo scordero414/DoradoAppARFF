@@ -157,46 +157,47 @@ const FinalStep = (props) => {
                 </View>
             }
             <View>
-                idRefExt == null
-                ?
-                <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => createQrCode()}>
-                    <Stack direction="row" space={3} alignItems="center">
-                        <Text fontSize="md" color='#ffffff'>Crear Código QR</Text>
-                    </Stack>
-                </Button>
-                :
-                <View></View>
-
-
-
-                createQr
-                ?
-                (
-
-                <View justifyContent='center' alignItems='center'>
-
-                    <Heading color="muted.400" size="xs" mt={5}>
-                        Guarda el código QR.
-                    </Heading>
-                    {idRevision !== null
+                {
+                    idRefExt == null
                         ?
-                        <Button variant="unlisted" onPress={onCapture}>
-                            <View ref={captureViewRef} collapsable={false}>
-                                <QRGnereator props={idRevision}></QRGnereator>
-                            </View>
+                        <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => createQrCode()}>
+                            <Stack direction="row" space={3} alignItems="center">
+                                <Text fontSize="md" color='#ffffff'>Crear Código QR</Text>
+                            </Stack>
                         </Button>
                         :
-                        <Spinner m={5} size="lg" />
-                    }
-                    <Heading color="muted.400" size="xs" >
-                        Dale click al código QR para guardarlo.
-                    </Heading>
-                </View>
-                )
-                :
-                <View></View>
+                        <View></View>
+                }
+
+                {
+                    createQr
+                        ?
+                        (
+
+                            <View justifyContent='center' alignItems='center'>
+
+                                <Heading color="muted.400" size="xs" mt={5}>
+                                    Guarda el código QR.
+                                </Heading>
+                                {idRevision !== null
+                                    ?
+                                    <Button variant="unlisted" onPress={onCapture}>
+                                        <View ref={captureViewRef} collapsable={false}>
+                                            <QRGnereator props={idRevision}></QRGnereator>
+                                        </View>
+                                    </Button>
+                                    :
+                                    <Spinner m={5} size="lg" />
+                                }
+                                <Heading color="muted.400" size="xs" >
+                                    Dale click al código QR para guardarlo.
+                                </Heading>
+                            </View>
+                        )
+                        :
+                        <View></View>
+                }
             </View>
-            )
 
         </View>
     )
