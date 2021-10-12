@@ -45,9 +45,10 @@ const Revision = (props) => {
         setShowModal(true)
         if (revision.user == null)
             getRevisionById(props.route.params.idExtintor);
-        knowEstatus()
+        
 
         if (revision.extintor !== null) {
+            knowEstatus()
             if (!(revision.extintor.fechaRecarga.seconds == undefined)) {
                 revision.extintor.fechaProximaRecarga = revision.extintor.fechaProximaRecarga.toDate();
                 revision.extintor.fechaRecarga = revision.extintor.fechaRecarga.toDate();
@@ -99,7 +100,6 @@ const Revision = (props) => {
     }
 
     const goNewRevision = () => {
-
         props.navigation.navigate('InfoQR', { revision: revision, revisionId: revisionIds, userId: props.route.params.userId })
     }
 

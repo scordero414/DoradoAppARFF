@@ -100,7 +100,7 @@ const InfoQR = (props) => {
         props.route.params.revisionId ?
             <FinalUpdateStep navigation={props.navigation} extintor={extintor} previousStep={previousStep} revisionId={props.route.params.revisionId} userId={props.route.params.userId}></FinalUpdateStep>
             :
-            <FinalStep extintor={extintor} previousStep={previousStep} userId={props.route.params}></FinalStep>
+            <FinalStep extintor={extintor} previousStep={previousStep} userId={props.route.params.userId}></FinalStep>
     ];
 
     return (
