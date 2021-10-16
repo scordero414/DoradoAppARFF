@@ -206,9 +206,9 @@ const HomeUser = (props) => {
                                             <View></View>
                                     }
 
-                                    {/* <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', {idExtintor: "SRhGnJDjjMMBwCgJFjK7", userId: user.id}) }}>
+                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', {idExtintor: "SRhGnJDjjMMBwCgJFjK7", userId: user.id}) }}>
                                         Revisión
-                                    </Button> */}
+                                    </Button>
 
 
 

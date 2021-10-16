@@ -102,20 +102,15 @@ const Step1 = (props) => {
                             <FormControl.Label _text={{ textColor }}>
                                 Toma una foto del extintor.
                             </FormControl.Label>
-                            {
-                                selectedImage === null ?
-                                    <Button size="xs" colorScheme="yellow" _text={{ color: 'white' }} onPress={openCamera} >
-                                        Tomar foto
-                                    </Button>
-                                    :
-                                    <View></View>
-                            }
+                            <Button size="xs" colorScheme="yellow" _text={{ color: 'white' }} onPress={openCamera} >
+                                Tomar foto
+                            </Button>
 
 
                             <VStack space={2} mt={5} mb={5} justifyContent="center" alignItem='center' >
                                 <HStack justifyContent="center" alignItem='center' >
                                     {
-                                        selectedImage && <Image m={5} source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
+                                        selectedImage && <Image m={5} source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} borderRadius={20}/>
                                     }
                                 </HStack>
                             </VStack>

@@ -39,59 +39,54 @@ const Revision = (props) => {
         extintor: null
     });
     const [revisionIds, setRevisionIds] = useState(null);
-    const [text, setText] = useState("");
+
 
     useEffect(() => {
         setShowModal(true)
         if (revision.user == null)
             getRevisionById(props.route.params.idExtintor);
-        
-
+    
         if (revision.extintor !== null) {
-            knowEstatus()
             if (!(revision.extintor.fechaRecarga.seconds == undefined)) {
                 revision.extintor.fechaProximaRecarga = revision.extintor.fechaProximaRecarga.toDate();
                 revision.extintor.fechaRecarga = revision.extintor.fechaRecarga.toDate();
                 revision.extintor.fechaPruebaHidrostatica = revision.extintor.fechaPruebaHidrostatica.toDate();
                 revision.extintor.fechaProximaPruebaHidrostatica = revision.extintor.fechaProximaPruebaHidrostatica.toDate();
             }
-
         }
     }, [revision])
 
     const knowEstatus = () => {
-
+        let arr = [];
         for (const property in revision.extintor) {
             if ((typeof revision.extintor[property]) === "string") {
-                if (revision.extintor[property] === ("Regular" || "Malo" || "N/T")) {
-                    setText(`${text}\n ${property}: ${revision.extintor[property]}\n`);
+                // if (revision.extintor[property] == ["Regular" || "Malo" || "N/T"]) {
+                if (revision.extintor[property] == "Regular" || revision.extintor[property] == "Malo" || revision.extintor[property] =="N/T") {
+                    arr.push(`${property}: ${revision.extintor[property]}`);
                 }
             }
 
         }
+        return arr;
     }
 
     const getRevisionById = async (id) => {
         const dbRef = store.collection("revision_extintores").doc(id)
         const doc = await dbRef.get()
         const revision_db = doc.data()
-        // console.log(revision_db)
 
         const user = store.collection("usuarios").doc(revision_db.userId)
         const doc_user = await user.get()
         const user_db = doc_user.data()
-        // revision.user = user_db;
-        // setRevision({ ..extintor,  })
 
         const extintor = store.collection("extintores").doc(revision_db.extintor)
         const doc_extintor = await extintor.get()
         const extintor_db = doc_extintor.data()
-        // revision.extintor = extintor_db;
 
         setRevisionIds(id)
 
         setRevision({ ...revision, extintor: extintor_db, user: user_db, date: revision_db.ultima_modificacion.toDate() })
-        // console.log(extintor_db.fechaProximaRecarga)
+
         setShowModal(false)
     }
 
@@ -215,7 +210,16 @@ const Revision = (props) => {
                                                     <Heading size="xs" fontSize={18} bold >
                                                         Revisar:
                                                     </Heading>
-                                                    <Text fontSize={"sm"}> {text}</Text>
+                                                    <VStack >
+    
+                                                    {
+                                                        knowEstatus().map(item => {
+                                                            return (
+                                                                <Text key={item}>-{item}</Text>
+                                                            );
+                                                        })
+                                                    }
+                                                    </VStack>
 
                                                     <Divider my={3} bg="primary.900" thickness="2" />
 
