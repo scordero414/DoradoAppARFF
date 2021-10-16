@@ -49,7 +49,6 @@ const Step4 = (props) => {
                 }}
             >
                 <Select.Item label="Bueno" value="Bueno" />
-                <Select.Item label="Malo" value="Malo" />
                 <Select.Item label="Regular" value="Regular" />
                 <Select.Item label="No Tiene" value="N/T" />
                 <Select.Item label="No Aplica" value="N/A" />
