@@ -206,10 +206,12 @@ const HomeUser = (props) => {
                                             <View></View>
                                     }
 
-                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', {idExtintor: "SRhGnJDjjMMBwCgJFjK7", userId: user.id}) }}>
-                                        Revisión
+                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('ListRevisions') }}>
+                                        <Text fontSize="md" color='#ffffff'>Ver todas las revisiones</Text>
                                     </Button>
-
+                                    <Button mt={2} colorScheme="cyan" _text={{ color: 'white' }} onPress={() => { props.navigation.navigate('Revision', {idExtintor: "LxSnMHTGy4ybuQwfPEkK", userId: user.id}) }}>
+                                        <Text fontSize="md" color='#ffffff'>R</Text>
+                                    </Button>
 
 
                                 </View>

@@ -35,13 +35,17 @@ import { MaterialIcons } from '@expo/vector-icons';
 import QRGnereator from '../QRGenerator'
 import ViewShot from "react-native-view-shot";
 import { captureRef } from "react-native-view-shot";
-
+import * as FileSystem from 'expo-file-system';
 import { store, storage } from '../../constants/keys'
 import { SimpleLineIcons } from '@expo/vector-icons';
 
 
-function useCapture() {
+function useCapture(id) {
     const captureViewRef = useRef(null);
+
+    const changeNameToId = (str, id) =>{
+        return `${str.split('/').slice(0,-1).join('/')}/${id}.jpg`;
+    }
 
     const onCapture = useCallback(() => {
         (async function onCapture() {
@@ -51,8 +55,10 @@ function useCapture() {
                 quality: 0.9,
             })
                 .then(uri => {
-                    console.log('storing ', uri);
-                    Share.share({ url: uri }).then(({ action, activityType }) => {
+                    let uri2 = changeNameToId(uri,id);
+                    FileSystem.copyAsync({from: uri, to: uri2})
+                    console.log('storing ', uri2); 
+                    Share.share({ url: uri2 }).then(({ action, activityType }) => {
                         if (action === Share.sharedAction)
                             console.log('Share was successful');
                         else
@@ -72,7 +78,7 @@ function useCapture() {
 const FinalStep = (props) => {
 
 
-    const { captureViewRef, onCapture } = useCapture();
+    const { captureViewRef, onCapture } = useCapture(props.extintor['codigo']);
     const toast = useToast()
 
     const [createQr, setCreateQr] = useState(false)

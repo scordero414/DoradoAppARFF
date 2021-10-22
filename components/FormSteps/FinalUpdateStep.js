@@ -46,10 +46,6 @@ const FinalUpdateStep = (props) => {
     const [revision, setRevision] = useState(null);
     const toast = useToast()
 
-    useEffect(() => {
-        console.log(props)
-    }, [])
-
     const validate = () => {
 
         for (let i in props.extintor) {

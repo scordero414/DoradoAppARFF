@@ -8,6 +8,7 @@ import Home from './screens/Home';
 import HomeUser from './screens/HomeUser';
 import InfoQR from './screens/InfoQR';
 import Revision from './screens/Revision';
+import ListRevisions from './screens/ListRevisions';
 
 const Stack = createStackNavigator();
 LogBox.ignoreLogs(['Setting a timer']);
@@ -22,6 +23,7 @@ function MyStack() {
       <Stack.Screen name="LogIn" component={LogIn} />
       <Stack.Screen name="CreateUser" component={CreateUser} />
       <Stack.Screen name="HomeUser" component={HomeUser} options={{gestureEnabled: false}}/>
+      <Stack.Screen name="ListRevisions" component={ListRevisions} />
       <Stack.Screen name="InfoQR" component={InfoQR} />
       <Stack.Screen name="Revision" component={Revision} />
     </Stack.Navigator>

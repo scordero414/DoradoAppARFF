@@ -33,9 +33,9 @@ const Revision = (props) => {
 
 
     const [showModal, setShowModal] = useState(false)
-    const [revision, setRevision] = useState({
-        user: null,
-        date: null,
+    const [revision, setRevision] = useState(props.route.params.revision ? props.route.params.revision : {
+        userId: null,
+        ultima_modificacion: null,
         extintor: null
     });
     const [revisionIds, setRevisionIds] = useState(null);
@@ -43,15 +43,17 @@ const Revision = (props) => {
 
     useEffect(() => {
         setShowModal(true)
-        if (revision.user == null)
+
+        if (revision.userId == null){
             getRevisionById(props.route.params.idExtintor);
-    
+        }
         if (revision.extintor !== null) {
-            if (!(revision.extintor.fechaRecarga.seconds == undefined)) {
+            if ((revision.extintor.fechaRecarga.seconds !== undefined)) {
                 revision.extintor.fechaProximaRecarga = revision.extintor.fechaProximaRecarga.toDate();
                 revision.extintor.fechaRecarga = revision.extintor.fechaRecarga.toDate();
                 revision.extintor.fechaPruebaHidrostatica = revision.extintor.fechaPruebaHidrostatica.toDate();
                 revision.extintor.fechaProximaPruebaHidrostatica = revision.extintor.fechaProximaPruebaHidrostatica.toDate();
+                setRevision({...revision})
             }
         }
     }, [revision])
@@ -61,7 +63,7 @@ const Revision = (props) => {
         for (const property in revision.extintor) {
             if ((typeof revision.extintor[property]) === "string") {
                 // if (revision.extintor[property] == ["Regular" || "Malo" || "N/T"]) {
-                if (revision.extintor[property] == "Regular" || revision.extintor[property] == "Malo" || revision.extintor[property] =="N/T") {
+                if (revision.extintor[property] == "Regular" || revision.extintor[property] == "Malo" || revision.extintor[property] == "N/T") {
                     arr.push(`${property}: ${revision.extintor[property]}`);
                 }
             }
@@ -71,6 +73,9 @@ const Revision = (props) => {
     }
 
     const getRevisionById = async (id) => {
+        if(id===null)
+            return
+        
         const dbRef = store.collection("revision_extintores").doc(id)
         const doc = await dbRef.get()
         const revision_db = doc.data()
@@ -82,10 +87,11 @@ const Revision = (props) => {
         const extintor = store.collection("extintores").doc(revision_db.extintor)
         const doc_extintor = await extintor.get()
         const extintor_db = doc_extintor.data()
+        
 
         setRevisionIds(id)
 
-        setRevision({ ...revision, extintor: extintor_db, user: user_db, date: revision_db.ultima_modificacion.toDate() })
+        setRevision({ ...revision, extintor: extintor_db, userId: user_db, ultima_modificacion: revision_db.ultima_modificacion })
 
         setShowModal(false)
     }
@@ -101,7 +107,7 @@ const Revision = (props) => {
     return (
         <NativeBaseProvider>
             {
-                revision.user !== null ?
+                revision.userId !== null ?
                     (
 
                         <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
@@ -118,25 +124,25 @@ const Revision = (props) => {
                                     mx='auto'
                                 >
                                     {
-                                        revision.user !== null
+                                        revision.userId !== null
                                             ?
                                             <HStack shadow={8} bg="blueGray.50" rounded={10} mt={3} justifyContent="center">
 
                                                 {
-                                                    revision.user && <Image
+                                                    revision.userId && <Image
                                                         m={4}
                                                         size={130}
-                                                        alt="userImg"
+                                                        alt="userIdImg"
                                                         borderRadius={100}
                                                         source={{
-                                                            uri: revision.user.img,
+                                                            uri: revision.userId.img,
                                                         }} />
                                                 }
                                                 <VStack flex={1} alignItems="center" space={3}>
-                                                    <Heading mt={6} size="xs" fontSize={23} bold textAlign="center">
-                                                        {revision.user.nombre}
+                                                    <Heading mt={6} ml={2} size="xs" fontSize={23} bold textAlign="center">
+                                                        {revision.userId.nombre}
                                                     </Heading>
-                                                    <Text textAlign="center">{"Fecha revisión: " + dateFormat(revision.date)}</Text>
+                                                    <Text textAlign="center">{"Fecha revisión: " + dateFormat(revision.ultima_modificacion.toDate())}</Text>
                                                 </VStack>
                                             </HStack>
                                             :
@@ -172,7 +178,7 @@ const Revision = (props) => {
                                                         Fechas importantes:
                                                     </Heading>
                                                     {
-                                                        (revision.extintor.fechaRecarga.seconds == undefined)
+                                                        (revision.extintor.fechaRecarga.seconds === undefined)
                                                             ?
                                                             <View>
                                                                 <HStack my={2} justifyContent="space-between">
@@ -201,7 +207,7 @@ const Revision = (props) => {
                                                                 </HStack>
                                                             </View>
                                                             :
-                                                            <Spinner/>
+                                                            <View></View>
                                                     }
 
 
@@ -211,14 +217,14 @@ const Revision = (props) => {
                                                         Revisar:
                                                     </Heading>
                                                     <VStack >
-    
-                                                    {
-                                                        knowEstatus().map(item => {
-                                                            return (
-                                                                <Text key={item}>-{item}</Text>
-                                                            );
-                                                        })
-                                                    }
+
+                                                        {
+                                                            knowEstatus().map(item => {
+                                                                return (
+                                                                    <Text key={item}>-{item}</Text>
+                                                                );
+                                                            })
+                                                        }
                                                     </VStack>
 
                                                     <Divider my={3} bg="primary.900" thickness="2" />
@@ -233,13 +239,16 @@ const Revision = (props) => {
                                             :
                                             <View></View>
                                     }
+                                    {
+                                        props.route.params.userId !== null &&
+                                        <Button mb={4} colorScheme="cyan" _text={{ color: 'white' }} onPress={goNewRevision}>
+                                            <HStack direction="row" space={3} alignItems="center">
+                                                <Text fontSize="md" color='#ffffff'>Realizar nueva revisión</Text>
+                                                <MaterialIcons name='edit' size={24} color="white" />
+                                            </HStack>
+                                        </Button>
+                                    }
 
-                                    <Button mb={4} colorScheme="cyan" _text={{ color: 'white' }} onPress={goNewRevision}>
-                                        <HStack direction="row" space={3} alignItems="center">
-                                            <Text fontSize="md" color='#ffffff'>Realizar nueva revisión</Text>
-                                            <MaterialIcons name='edit' size={24} color="white" />
-                                        </HStack>
-                                    </Button>
 
                                 </Box>
 

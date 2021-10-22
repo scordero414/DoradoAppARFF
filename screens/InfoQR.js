@@ -9,19 +9,11 @@ import {
     Icon,
     IconButton,
     HStack,
-    Alert,
     Text,
-    Stack,
     View,
-    StatusBar,
-    KeyboardAvoidingView,
-    Spinner,
     Progress
 } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
-// import { NativeBaseProvider, View, VStack, HStack, Image, Stack, Heading, IconButton, Box, Flex, Spacer, Button, Text, CheckIcon, Accordion, Select, Content, Alert, List } from 'native-base'
-import QRGnereator from '../components/QRGenerator'
-import ViewShot from "react-native-view-shot";
 import Step1 from '../components/FormSteps/Step1';
 import Step2 from '../components/FormSteps/Step2';
 import Step3 from '../components/FormSteps/Step3';
