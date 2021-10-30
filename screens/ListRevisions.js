@@ -20,8 +20,10 @@ import {
     Divider,
     Pressable,
     Menu, HamburgerIcon,
-    Checkbox
-
+    Checkbox,
+    Modal,
+    Badge,
+    FormControl, Select, CheckIcon
 } from 'native-base';
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { store } from '../constants/keys'
@@ -33,6 +35,9 @@ const ListRevisions = (props) => {
     const [search, setSearch] = useState('');
     const [size, setSize] = useState(0);
     const [isForRevision, setForRevision] = useState(false);
+    const [isForTypeExtintor, setForTypeExtintor] = useState(false);
+    const [showModal, setShowModal] = useState(false)
+    const [typeExtintor, setTypeExtintor] = useState('');
 
     useEffect(() => {
         setAllRevisions([])
@@ -108,34 +113,48 @@ const ListRevisions = (props) => {
         console.log(revision)
     }
 
-    const handleFilter = () => {
+    const handleFilterCheckExtintor = () => {
+        setForTypeExtintor(false)
         if (!isForRevision) {
-            checkPropsInExtintors()
+            checkPropsInExtintors("regular")
         } else {
             setFilterRevisions([])
 
         }
         setForRevision(!isForRevision)
-        
-
-        // for (const revision in allRevisions) {
-        //     console.log(revision)
-        // 
-        // }
+    }
+    const handleFilterType = () => {
+        setForRevision(false)
+        if (!isForTypeExtintor) {
+            checkPropsInExtintors("tipoAgente")
+        } else {
+            setFilterRevisions([])
+        }
+        setForTypeExtintor(!isForTypeExtintor)
     }
 
-    const checkPropsInExtintors = () => {
+    const checkPropsInExtintors = (prop) => {
         setFilterRevisions([])
         allRevisions.map(revision => {
             for (const property in revision.extintor) {
-
                 if ((typeof revision.extintor[property]) === "string") {
-                    // if (revision.extintor[property] == ["Regular" || "Malo" || "N/T"]) {
-                    if (revision.extintor[property] == "Regular" || revision.extintor[property] == "Malo" || revision.extintor[property] == "N/T") {
-                        setFilterRevisions((oldArray) => [...oldArray, revision])
-                        return;
+                    if (prop == "regular") {
+                        // if (revision.extintor[property] == ["Regular" || "Malo" || "N/T"]) {
+                        if (revision.extintor[property] == "Regular" || revision.extintor[property] == "Malo" || revision.extintor[property] == "N/T") {
+                            setFilterRevisions((oldArray) => [...oldArray, revision])
+                            return;
+                        }
                     }
+                    if (prop == "tipoAgente") {
+                        if (revision.extintor[property] == typeExtintor) {
+                            setFilterRevisions((oldArray) => [...oldArray, revision])
+                            return;
+                        }
+                    }
+
                 }
+                
+
             }
         })
     }
@@ -193,6 +212,51 @@ const ListRevisions = (props) => {
         )
     }
 
+    const modalFilter =
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)} >
+            <Modal.Content maxWidth="400px" style={styles.topModal}>
+                <Modal.CloseButton />
+                <Modal.Header>Filtrar</Modal.Header>
+                <Modal.Body alignItems='flex-start'>
+                    <Checkbox my="1" mx={2} colorScheme="info" isChecked={isForRevision} onChange={handleFilterCheckExtintor} accessibilityLabel="choose numbers" >
+                        Extintores pendientes.
+                    </Checkbox>
+
+
+                    <Checkbox my="1" mx={2} colorScheme="info" isChecked={isForTypeExtintor} onChange={handleFilterType} accessibilityLabel="choose numbers" isDisabled={!typeExtintor.length ? true : false}>
+                        Tipo de agente
+                        <Select
+                            ml={2}
+                            selectedValue={typeExtintor}
+                            minWidth={120}
+                            p={1}
+                            // minHeight={15}
+                            placeholder="Selecciona uno..."
+                            onValueChange={(itemValue) => {
+                                // props.extintor.tipoAgente = itemValue
+                                setTypeExtintor(itemValue)
+                                if (isForTypeExtintor){
+                                    handleFilterType()
+                                }
+                            }}
+                            _selectedItem={{
+                                bg: "cyan.600",
+                                endIcon: <CheckIcon size={4} />,
+                            }}
+                        >
+                            <Select.Item label="CO2" value="CO2" />
+                            <Select.Item label="ABC" value="ABC" />
+                            <Select.Item label="AL" value="AL" />
+                            <Select.Item label="BCL" value="BCL" />
+                            <Select.Item label="ABC L" value="ABC L" />
+                            <Select.Item label="BC" value="BC" />
+                            <Select.Item label="ES" value="ES" />
+                        </Select>
+                    </Checkbox>
+                </Modal.Body>
+            </Modal.Content>
+        </Modal>;
+
 
     return (
         <NativeBaseProvider>
@@ -236,10 +300,46 @@ const ListRevisions = (props) => {
                                 />
                             </VStack>
                         </VStack>
-                        <Checkbox colorScheme="info" isChecked={isForRevision} onChange={handleFilter} accessibilityLabel="choose numbers" >
-                            Filtrar por extintores pendientes.
-                        </Checkbox>
-                        <Divider my="2"/>
+                        <Pressable
+                            onPress={() => {
+                                setShowModal(true)
+                            }}
+                        >
+                            {({ isHovered, isFocused, isPressed }) => {
+                                return (
+                                    <Badge colorScheme="success" alignSelf="flex-end" variant={isPressed ? "solid" : "outline"}
+                                        px="3"
+                                        py="1"
+                                        mr={3}
+                                        rounded={8}
+                                        _text={{
+                                            fontSize: 15,
+                                        }}
+                                        style={{
+                                            transform: [
+                                                {
+                                                    scale: isPressed ? 0.96 : 1,
+                                                },
+                                            ],
+                                        }}>
+
+                                        Filtrar
+                                        {/* <Icon
+                                            // m="2"
+                                            // ml="3"
+                                            // size="6"
+                                            color="success.600"
+                                            as={<MaterialIcons name="filter-list" />}
+                                        /> */}
+                                    </Badge>
+                                )
+                            }}
+                        </Pressable>
+
+                        {
+                            modalFilter
+                        }
+                        <Divider my="2" />
                         {/* <Heading fontSize="2xl" alignSelf="center">Revisiones</Heading> */}
                         <VStack space={2} >
                             {
@@ -262,6 +362,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#ffffff',
+    },
+    topModal: {
+        marginBottom: "auto",
+        marginTop: 100,
     }
 })
 export default ListRevisions
