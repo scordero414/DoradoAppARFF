@@ -55,10 +55,10 @@ function useCapture(id) {
                 quality: 0.9,
             })
                 .then(uri => {
-                    let uri2 = changeNameToId(uri,id);
-                    FileSystem.copyAsync({from: uri, to: uri2})
-                    console.log('storing ', uri2); 
-                    Share.share({ url: uri2 }).then(({ action, activityType }) => {
+                    // let uri2 = changeNameToId(uri,id);
+                    // FileSystem.copyAsync({from: uri, to: uri2})
+                    // console.log('storing ', uri2); 
+                    Share.share({ url: uri }).then(({ action, activityType }) => {
                         if (action === Share.sharedAction)
                             console.log('Share was successful');
                         else

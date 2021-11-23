@@ -44,7 +44,7 @@ const Revision = (props) => {
     useEffect(() => {
         setShowModal(true)
 
-        if (revision.userId == null){
+        if (revision.userId == null) {
             getRevisionById(props.route.params.idExtintor);
         }
         if (revision.extintor !== null) {
@@ -53,7 +53,7 @@ const Revision = (props) => {
                 revision.extintor.fechaRecarga = revision.extintor.fechaRecarga.toDate();
                 revision.extintor.fechaPruebaHidrostatica = revision.extintor.fechaPruebaHidrostatica.toDate();
                 revision.extintor.fechaProximaPruebaHidrostatica = revision.extintor.fechaProximaPruebaHidrostatica.toDate();
-                setRevision({...revision})
+                setRevision({ ...revision })
             }
         }
     }, [revision])
@@ -73,9 +73,9 @@ const Revision = (props) => {
     }
 
     const getRevisionById = async (id) => {
-        if(id===null)
+        if (id === null)
             return
-        
+
         const dbRef = store.collection("revision_extintores").doc(id)
         const doc = await dbRef.get()
         const revision_db = doc.data()
@@ -87,7 +87,7 @@ const Revision = (props) => {
         const extintor = store.collection("extintores").doc(revision_db.extintor)
         const doc_extintor = await extintor.get()
         const extintor_db = doc_extintor.data()
-        
+
 
         setRevisionIds(id)
 
@@ -152,9 +152,16 @@ const Revision = (props) => {
                                         revision.extintor !== null
                                             ?
                                             <VStack mt={5} shadow={8} bg="blueGray.100" rounded={10} mb={5}>
-                                                <Heading mt={3} size="xs" fontSize={23} bold textAlign="center">
-                                                    {"Extintor " + revision.extintor.codigo}
-                                                </Heading>
+                                                <HStack alignItems="center" justifyContent="center">
+                                                    <Heading mt={3} size="xs" fontSize={23} bold textAlign="center">
+                                                        {"Extintor " + revision.extintor.codigo }
+                                                    </Heading>
+                                                    <Badge ml={2} mt={4} p={1} rounded={8} colorScheme="info" variant="subtle">{revision.extintor.tipoAgente}</Badge>
+                                                </HStack>
+
+
+
+
                                                 {
                                                     revision.extintor && <Image
                                                         alignSelf="center"
