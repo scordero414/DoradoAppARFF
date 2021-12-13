@@ -62,16 +62,16 @@ function useInput(dateS) {
 const Step2 = (props) => {
     const textColor = { color: 'muted.700', fontSize: 'sm', fontWeight: 600 }
 
-    const fechaRecarga = useInput(props.extintor.fechaRecarga !== null ? new Date(props.extintor.fechaRecarga) : new Date());
-    const fechaProximaRecarga = useInput(props.extintor.fechaProximaRecarga !== null ? new Date(props.extintor.fechaProximaRecarga) : new Date());
-    const fechaPruebaHidrostatica = useInput(props.extintor.fechaPruebaHidrostatica !== null ? new Date(props.extintor.fechaPruebaHidrostatica) : new Date());
-    const fechaProximaPruebaHidrostatica = useInput(props.extintor.fechaProximaPruebaHidrostatica !== null ? new Date(props.extintor.fechaProximaPruebaHidrostatica) : new Date());
+    const fecha_recarga = useInput(props.extintor.fecha_recarga !== null ? new Date(props.extintor.fecha_recarga) : new Date());
+    const fecha_proxima_recarga = useInput(props.extintor.fecha_proxima_recarga !== null ? new Date(props.extintor.fecha_proxima_recarga) : new Date());
+    const fecha_prueba_hidrostatica = useInput(props.extintor.fecha_prueba_hidrostatica !== null ? new Date(props.extintor.fecha_prueba_hidrostatica) : new Date());
+    const fecha_proxima_prueba_hidrostatica = useInput(props.extintor.fecha_proxima_prueba_hidrostatica !== null ? new Date(props.extintor.fecha_proxima_prueba_hidrostatica) : new Date());
 
     const saveDates = () => {
-        props.extintor.fechaRecarga = fechaRecarga.date;
-        props.extintor.fechaProximaRecarga = fechaProximaRecarga.date;
-        props.extintor.fechaPruebaHidrostatica = fechaPruebaHidrostatica.date;
-        props.extintor.fechaProximaPruebaHidrostatica = fechaProximaPruebaHidrostatica.date;
+        props.extintor.fecha_recarga = fecha_recarga.date;
+        props.extintor.fecha_proxima_recarga = fecha_proxima_recarga.date;
+        props.extintor.fecha_prueba_hidrostatica = fecha_prueba_hidrostatica.date;
+        props.extintor.fecha_proxima_prueba_hidrostatica = fecha_proxima_prueba_hidrostatica.date;
     }
 
     return (
@@ -86,12 +86,12 @@ const Step2 = (props) => {
                     Tipo de agente
                 </FormControl.Label>
                 <Select
-                    selectedValue={props.extintor.tipoAgente}
+                    selectedValue={props.extintor.tipo_agente}
                     minWidth={200}
                     placeholder="Selecciona uno..."
                     onValueChange={(itemValue) => {
-                        // props.extintor.tipoAgente = itemValue
-                        props.setExtintorValues("tipoAgente", itemValue)
+                        // props.extintor.tipo_agente = itemValue
+                        props.setExtintorValues("tipo_agente", itemValue)
                     }}
                     _selectedItem={{
                         bg: "cyan.600",
@@ -112,15 +112,10 @@ const Step2 = (props) => {
                 </FormControl.Label>
                 <HStack justifyContent="space-between">
                     <Input minWidth={175} value={props.extintor.capacidad} variant="outline" keyboardType="decimal-pad" onChangeText={(text) => {
-                        // props.extintor.capacidad = text
-                        // setExtintor({
-                        //     ...extintor,
-                        //     capacidad: text
-                        // })
                         props.setExtintorValues("capacidad", text)
                     }} />
                     <Select
-                        selectedValue={props.extintor.capacidadMedida}
+                        selectedValue={props.extintor.capacidad_medida}
                         // isDisabled={true}
                         minWidth={150}
                         placeholder="Selecciona uno..."
@@ -129,8 +124,7 @@ const Step2 = (props) => {
                             endIcon: <CheckIcon size={4} />,
                         }}
                         onValueChange={(itemValue) => {
-                            // props.extintor.tipoAgente = itemValue
-                            props.setExtintorValues("capacidadMedida", itemValue)
+                            props.setExtintorValues("capacidad_medida", itemValue)
                         }}
                     >
                         <Select.Item label="Lbs" value="Lbs" />
@@ -144,18 +138,18 @@ const Step2 = (props) => {
                 <Button
                     variant="outline"
                     colorScheme="light"
-                    onPress={fechaRecarga.showDatepicker}
+                    onPress={fecha_recarga.showDatepicker}
                 >
-                    {fechaRecarga.date.toDateString()}
+                    {fecha_recarga.date.toDateString()}
                 </Button>
-                {fechaRecarga.show && (
+                {fecha_recarga.show && (
                     <DateTimePicker
                         testID="dateTimePicker1"
-                        value={fechaRecarga.date}
-                        mode={fechaRecarga.mode}
+                        value={fecha_recarga.date}
+                        mode={fecha_recarga.mode}
                         is24Hour={true}
                         display="default"
-                        onChange={fechaRecarga.onChange}
+                        onChange={fecha_recarga.onChange}
                     />
                 )}
 
@@ -164,19 +158,19 @@ const Step2 = (props) => {
                 </FormControl.Label>
                 <Button
                     variant="outline"
-                    onPress={fechaProximaRecarga.showDatepicker}
+                    onPress={fecha_proxima_recarga.showDatepicker}
                     colorScheme="light"
                 >
-                    {fechaProximaRecarga.date.toDateString()}
+                    {fecha_proxima_recarga.date.toDateString()}
                 </Button>
-                {fechaProximaRecarga.show && (
+                {fecha_proxima_recarga.show && (
                     <DateTimePicker
                         testID="dateTimePicker1"
-                        value={fechaProximaRecarga.date}
-                        mode={fechaProximaRecarga.mode}
+                        value={fecha_proxima_recarga.date}
+                        mode={fecha_proxima_recarga.mode}
                         is24Hour={true}
                         display="default"
-                        onChange={fechaProximaRecarga.onChange}
+                        onChange={fecha_proxima_recarga.onChange}
                     />
                 )}
 
@@ -185,19 +179,19 @@ const Step2 = (props) => {
                 </FormControl.Label>
                 <Button
                     variant="outline"
-                    onPress={fechaPruebaHidrostatica.showDatepicker}
+                    onPress={fecha_prueba_hidrostatica.showDatepicker}
                     colorScheme="light"
                 >
-                    {fechaPruebaHidrostatica.date.toDateString()}
+                    {fecha_prueba_hidrostatica.date.toDateString()}
                 </Button>
-                {fechaPruebaHidrostatica.show && (
+                {fecha_prueba_hidrostatica.show && (
                     <DateTimePicker
                         testID="dateTimePicker1"
-                        value={fechaPruebaHidrostatica.date}
-                        mode={fechaPruebaHidrostatica.mode}
+                        value={fecha_prueba_hidrostatica.date}
+                        mode={fecha_prueba_hidrostatica.mode}
                         is24Hour={true}
                         display="default"
-                        onChange={fechaPruebaHidrostatica.onChange}
+                        onChange={fecha_prueba_hidrostatica.onChange}
                     />
                 )}
 
@@ -206,19 +200,19 @@ const Step2 = (props) => {
                 </FormControl.Label>
                 <Button
                     variant="outline"
-                    onPress={fechaProximaPruebaHidrostatica.showDatepicker}
+                    onPress={fecha_proxima_prueba_hidrostatica.showDatepicker}
                     colorScheme="light"
                 >
-                    {fechaProximaPruebaHidrostatica.date.toDateString()}
+                    {fecha_proxima_prueba_hidrostatica.date.toDateString()}
                 </Button>
-                {fechaProximaPruebaHidrostatica.show && (
+                {fecha_proxima_prueba_hidrostatica.show && (
                     <DateTimePicker
                         testID="dateTimePicker1"
-                        value={fechaProximaPruebaHidrostatica.date}
-                        mode={fechaProximaPruebaHidrostatica.mode}
+                        value={fecha_proxima_prueba_hidrostatica.date}
+                        mode={fecha_proxima_prueba_hidrostatica.mode}
                         is24Hour={true}
                         display="default"
-                        onChange={fechaProximaPruebaHidrostatica.onChange}
+                        onChange={fecha_proxima_prueba_hidrostatica.onChange}
                     />
                 )}
                 {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}

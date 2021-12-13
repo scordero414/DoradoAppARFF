@@ -140,7 +140,7 @@ const Step1 = (props) => {
                                 Ubicación detallada
                             </FormControl.Label>
                             <Input variant="outline" defaultValue={props.extintor.ubicacionDetallada} onChangeText={(text) => {
-                                props.extintor.ubicacionDetallada = text
+                                props.extintor.ubicacion_detallada = text
                             }} />
 
 
@@ -148,7 +148,7 @@ const Step1 = (props) => {
                                 Ubicación exacta
                             </FormControl.Label>
                             <Input variant="outline" defaultValue={props.extintor.ubicacionExacta} onChangeText={(text) => {
-                                props.extintor.ubicacionExacta = text
+                                props.extintor.ubicacion_exacta = text
                             }} />
                         </FormControl>
                         <Button mt={5} colorScheme="cyan" _text={{ color: 'white' }} onPress={props.nextStep}>

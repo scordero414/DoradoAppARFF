@@ -78,7 +78,7 @@ const Step5 = (props) => {
                     Presión manómetro
                 </FormControl.Label>
                 {
-                    showOptionsSelect("presionManometro")
+                    showOptionsSelect("presion_manometro")
                 }
 
 
@@ -105,7 +105,7 @@ const Step5 = (props) => {
                     Anillo de verificación
                 </FormControl.Label>
                 {
-                    showOptionsSelect("anilloVerificacion")
+                    showOptionsSelect("anillo_verificacion")
                 }
 
 

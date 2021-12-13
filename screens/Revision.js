@@ -48,11 +48,11 @@ const Revision = (props) => {
             getRevisionById(props.route.params.idExtintor);
         }
         if (revision.extintor !== null) {
-            if ((revision.extintor.fechaRecarga.seconds !== undefined)) {
-                revision.extintor.fechaProximaRecarga = revision.extintor.fechaProximaRecarga.toDate();
-                revision.extintor.fechaRecarga = revision.extintor.fechaRecarga.toDate();
-                revision.extintor.fechaPruebaHidrostatica = revision.extintor.fechaPruebaHidrostatica.toDate();
-                revision.extintor.fechaProximaPruebaHidrostatica = revision.extintor.fechaProximaPruebaHidrostatica.toDate();
+            if ((revision.extintor.fecha_recarga.seconds !== undefined)) {
+                revision.extintor.fecha_proxima_recarga = revision.extintor.fecha_proxima_recarga.toDate();
+                revision.extintor.fecha_recarga = revision.extintor.fecha_recarga.toDate();
+                revision.extintor.fecha_prueba_hidrostatica = revision.extintor.fecha_prueba_hidrostatica.toDate();
+                revision.extintor.fecha_proxima_prueba_hidrostatica = revision.extintor.fecha_proxima_prueba_hidrostatica.toDate();
                 setRevision({ ...revision })
             }
         }
@@ -64,7 +64,7 @@ const Revision = (props) => {
             if ((typeof revision.extintor[property]) === "string") {
                 // if (revision.extintor[property] == ["Regular" || "Malo" || "N/T"]) {
                 if (revision.extintor[property] == "Regular" || revision.extintor[property] == "Malo" || revision.extintor[property] == "N/T") {
-                    arr.push(`${property}: ${revision.extintor[property]}`);
+                    arr.push(` ${property.replace(new RegExp("\\_","g"),' ')}: ${revision.extintor[property]}`);
                 }
             }
 
@@ -156,7 +156,7 @@ const Revision = (props) => {
                                                     <Heading mt={3} size="xs" fontSize={23} bold textAlign="center">
                                                         {"Extintor " + revision.extintor.codigo }
                                                     </Heading>
-                                                    <Badge ml={2} mt={4} p={1} rounded={8} colorScheme="info" variant="subtle">{revision.extintor.tipoAgente}</Badge>
+                                                    <Badge ml={2} mt={4} p={1} rounded={8} colorScheme="info" variant="subtle">{revision.extintor.tipo_agente}</Badge>
                                                 </HStack>
 
 
@@ -177,7 +177,7 @@ const Revision = (props) => {
                                                     <Heading size="xs" fontSize={18} bold >
                                                         Ubicación:
                                                     </Heading>
-                                                    <Text >{`${revision.extintor.terminal}, ${revision.extintor.ubicacion}, ${revision.extintor.ubicacionDetallada}, ${revision.extintor.ubicacionExacta}`}</Text>
+                                                    <Text >{`${revision.extintor.terminal}, ${revision.extintor.ubicacion}, ${revision.extintor.ubicacion_detallada}, ${revision.extintor.ubicacion_exacta}`}</Text>
 
                                                     <Divider my={3} bg="primary.900" thickness="2" />
 
@@ -185,32 +185,32 @@ const Revision = (props) => {
                                                         Fechas importantes:
                                                     </Heading>
                                                     {
-                                                        (revision.extintor.fechaRecarga.seconds === undefined)
+                                                        (revision.extintor.fecha_recarga.seconds === undefined)
                                                             ?
                                                             <View>
                                                                 <HStack my={2} justifyContent="space-between">
                                                                     <Text fontSize={"sm"} >
                                                                         Recarga o mantenimiento:
                                                                     </Text>
-                                                                    <Badge colorScheme="success">{dateFormat(revision.extintor.fechaRecarga)}</Badge>
+                                                                    <Badge colorScheme="success">{dateFormat(revision.extintor.fecha_recarga)}</Badge>
                                                                 </HStack>
                                                                 <HStack my={2} justifyContent="space-between">
                                                                     <Text fontSize={"sm"} >
                                                                         Próxima recarga o mantenimiento:
                                                                     </Text>
-                                                                    <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaRecarga)}</Badge>
+                                                                    <Badge colorScheme="yellow">{dateFormat(revision.extintor.fecha_proxima_recarga)}</Badge>
                                                                 </HStack>
                                                                 <HStack my={2} justifyContent="space-between">
                                                                     <Text fontSize={"sm"} >
                                                                         Prueba hidrostática:
                                                                     </Text>
-                                                                    <Badge colorScheme="success">{dateFormat(revision.extintor.fechaPruebaHidrostatica)}</Badge>
+                                                                    <Badge colorScheme="success">{dateFormat(revision.extintor.fecha_prueba_hidrostatica)}</Badge>
                                                                 </HStack>
                                                                 <HStack my={2} justifyContent="space-between">
                                                                     <Text fontSize={"sm"} >
                                                                         Próxima prueba hidrostática:
                                                                     </Text>
-                                                                    <Badge colorScheme="yellow">{dateFormat(revision.extintor.fechaProximaPruebaHidrostatica)}</Badge>
+                                                                    <Badge colorScheme="yellow">{dateFormat(revision.extintor.fecha_proxima_prueba_hidrostatica)}</Badge>
                                                                 </HStack>
                                                             </View>
                                                             :

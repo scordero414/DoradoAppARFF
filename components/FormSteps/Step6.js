@@ -94,7 +94,7 @@ const Step5 = (props) => {
                         Tarjeta de inspección mensual
                     </FormControl.Label>
                     {
-                        showOptionsSelect("tarjetaInspeccionMensual")
+                        showOptionsSelect("tarjeta_inspeccion_mensual")
                     }
 
                     <FormControl.Label mt={2} _text={{ textColor }}>

@@ -67,7 +67,7 @@ const Step4 = (props) => {
                 Etiqueta de codificación
             </FormControl.Label>
             {
-                showOptionsSelect("etiquetaCodificacion")
+                showOptionsSelect("etiqueta_codificacion")
             }
 
 
@@ -86,7 +86,7 @@ const Step4 = (props) => {
                 Manija superior
             </FormControl.Label>
             {
-                showOptionsSelect("manijaSuperior")
+                showOptionsSelect("manija_superior")
             }
 
 
@@ -96,7 +96,7 @@ const Step4 = (props) => {
                 Manija inferior
             </FormControl.Label>
             {
-                showOptionsSelect("manijaInferior")
+                showOptionsSelect("manija_inferior")
             }
 
 
@@ -105,7 +105,7 @@ const Step4 = (props) => {
                 Pin de seguridad
             </FormControl.Label>
             {
-                showOptionsSelect("pinSeguridad")
+                showOptionsSelect("pin_seguridad")
             }
 
 

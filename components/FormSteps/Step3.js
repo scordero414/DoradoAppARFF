@@ -66,15 +66,11 @@ const Step3 = (props) => {
                 Peso total (Co2)
             </FormControl.Label>
             <HStack justifyContent="space-between">
-                <Input minWidth={175} value={props.extintor.pesoTotal} variant="outline"  onChangeText={(text) => {
-                    props.extintor.pesoTotal = text
-                    // setExtintor({
-                    //     ...extintor,
-                    //     pesoTotal: text
-                    // })
+                <Input minWidth={175} value={props.extintor.peso_total} variant="outline"  onChangeText={(text) => {
+                    props.extintor.peso_total = text
                 }} />
                 <Select
-                    selectedValue={props.extintor.capacidadMedida}
+                    selectedValue={props.extintor.capacidad_medida}
                     isDisabled={true}
                     minWidth={150}
                     placeholder="Selecciona uno..."
@@ -99,7 +95,7 @@ const Step3 = (props) => {
                 Aro protector de cilindro
             </FormControl.Label>
             {
-                showOptionsSelect("aroProtectorCilindro")
+                showOptionsSelect("aro_protector_cilindro")
             }
 
 
@@ -118,7 +114,7 @@ const Step3 = (props) => {
                 Placa de instrucción
             </FormControl.Label>
             {
-                showOptionsSelect("placaInstruccion")
+                showOptionsSelect("placa_instruccion")
             }
 
 
@@ -127,7 +123,7 @@ const Step3 = (props) => {
                 Tarjeta recarga
             </FormControl.Label>
             {
-                showOptionsSelect("tarjetaRecarga")
+                showOptionsSelect("tarjeta_recarga")
             }
             <HStack justifyContent="space-between">
                 <Button mt={5} colorScheme="cyan" _text={{ color: 'white' }} onPress={props.previousStep}>
